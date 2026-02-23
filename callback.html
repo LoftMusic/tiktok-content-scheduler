@@ -58,7 +58,7 @@
       document.querySelector('p').textContent = 'Error: ' + error + '. Please close this window and try again.';
     } else if (code) {
       // Redirect to local server to complete authentication (avoids CORS)
-      window.location.href = 'http://localhost:3000/api/auth/callback?code=' + code + '&state=' + (state || '');
+      window.location.href = 'http://localhost:3001/api/auth/callback?code=' + code + '&state=' + (state || '');
     } else {
       document.querySelector('.spinner').style.borderTopColor = '#ff4757';
       document.querySelector('h1').textContent = 'No Code Received';
