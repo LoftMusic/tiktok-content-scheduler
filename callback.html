@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authentication Callback - TikTok Content Scheduler</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+    }
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #2a2a2a;
+      border-top-color: #ff0050;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 24px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    h1 { font-size: 24px; margin-bottom: 12px; }
+    p { color: #a0a0a0; font-size: 14px; }
+    .success { color: #00d46a; }
+    .error { color: #ff4757; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="spinner"></div>
+    <h1>Processing Authentication...</h1>
+    <p>Please wait while we complete the verification.</p>
+  </div>
+
+  <script>
+    // TikTok OAuth returns tokens in the URL hash fragment
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const queryParams = new URLSearchParams(window.location.search);
+
+    // Get the access token from hash or query
+    const accessToken = hashParams.get('access_token') || queryParams.get('access_token');
+    const error = queryParams.get('error');
+
+    if (error) {
+      document.querySelector('.spinner').style.borderTopColor = '#ff4757';
+      document.querySelector('h1').textContent = 'Authentication Failed';
+      document.querySelector('h1').className = 'error';
+      document.querySelector('p').textContent = 'Error: ' + error;
+    } else if (accessToken) {
+      // Success - send token to parent window or backend
+      document.querySelector('.spinner').style.borderTopColor = '#00d46a';
+      document.querySelector('h1').textContent = 'Authentication Successful!';
+      document.querySelector('h1').className = 'success';
+      document.querySelector('p').textContent = 'You can close this window now.';
+      
+      // Send to parent window (for popup auth flow)
+      if (window.opener) {
+        window.opener.postMessage({ 
+          type: 'tiktok_auth_success', 
+          token: accessToken 
+        }, '*');
+      }
+      
+      // Also try to send to a local callback endpoint if available
+      // This can be customized based on your setup
+      console.log('Auth successful, token received');
+    } else {
+      // No token found - might be a server-side redirect
+      document.querySelector('p').textContent = 'Redirecting...';
+      
+      // Try sending any URL params to parent
+      const allParams = Object.fromEntries(new URLSearchParams(window.location.search));
+      if (window.opener && Object.keys(allParams).length > 0) {
+        window.opener.postMessage({ 
+          type: 'tiktok_auth_callback', 
+          params: allParams 
+        }, '*');
+      }
+    }
+  </script>
+</body>
+</html>
