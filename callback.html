@@ -45,49 +45,24 @@
   </div>
 
   <script>
-    // TikTok OAuth returns tokens in the URL hash fragment
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const queryParams = new URLSearchParams(window.location.search);
-
-    // Get the access token from hash or query
-    const accessToken = hashParams.get('access_token') || queryParams.get('access_token');
-    const error = queryParams.get('error');
+    // TikTok OAuth returns authorization CODE in query params
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const error = urlParams.get('error');
+    const state = urlParams.get('state');
 
     if (error) {
       document.querySelector('.spinner').style.borderTopColor = '#ff4757';
       document.querySelector('h1').textContent = 'Authentication Failed';
       document.querySelector('h1').className = 'error';
-      document.querySelector('p').textContent = 'Error: ' + error;
-    } else if (accessToken) {
-      // Success - send token to parent window or backend
-      document.querySelector('.spinner').style.borderTopColor = '#00d46a';
-      document.querySelector('h1').textContent = 'Authentication Successful!';
-      document.querySelector('h1').className = 'success';
-      document.querySelector('p').textContent = 'You can close this window now.';
-      
-      // Send to parent window (for popup auth flow)
-      if (window.opener) {
-        window.opener.postMessage({ 
-          type: 'tiktok_auth_success', 
-          token: accessToken 
-        }, '*');
-      }
-      
-      // Also try to send to a local callback endpoint if available
-      // This can be customized based on your setup
-      console.log('Auth successful, token received');
+      document.querySelector('p').textContent = 'Error: ' + error + '. Please close this window and try again.';
+    } else if (code) {
+      // Redirect to local server to complete authentication (avoids CORS)
+      window.location.href = 'http://localhost:3000/api/auth/callback?code=' + code + '&state=' + (state || '');
     } else {
-      // No token found - might be a server-side redirect
-      document.querySelector('p').textContent = 'Redirecting...';
-      
-      // Try sending any URL params to parent
-      const allParams = Object.fromEntries(new URLSearchParams(window.location.search));
-      if (window.opener && Object.keys(allParams).length > 0) {
-        window.opener.postMessage({ 
-          type: 'tiktok_auth_callback', 
-          params: allParams 
-        }, '*');
-      }
+      document.querySelector('.spinner').style.borderTopColor = '#ff4757';
+      document.querySelector('h1').textContent = 'No Code Received';
+      document.querySelector('p').textContent = 'Authentication failed. Please close this window and try again.';
     }
   </script>
 </body>
