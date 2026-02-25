@@ -22,7 +22,7 @@
     .spinner {
       width: 48px;
       height: 48px;
-      border: 4px solid #2a2a2a;
+      border: 4px solid ##2a2a2a;
       border-top-color: #ff0050;
       border-radius: 50%;
       animation: spin 1s linear infinite;
@@ -39,30 +39,55 @@
 </head>
 <body>
   <div class="container">
-    <div class="spinner"></div>
-    <h1>Processing Authentication...</h1>
-    <p>Please wait while we complete the verification.</p>
+    <div class="spinner" id="spinner"></div>
+    <h1 id="title">Processing Authentication...</h1>
+    <p id="message">Please wait while we complete the verification.</p>
   </div>
 
   <script>
-    // TikTok OAuth returns authorization CODE in query params
+    const spinner = document.getElementById('spinner');
+    const title = document.getElementById('title');
+    const message = document.getElementById('message');
+
+    function showError(msg) {
+      spinner.style.borderTopColor = '#ff4757';
+      title.textContent = 'Authentication Failed';
+      title.className = 'error';
+      message.textContent = msg + '. Please close this window and try again.';
+    }
+
+    function showSuccess() {
+      spinner.style.borderTopColor = '#00d46a';
+      title.textContent = 'Authentication Successful!';
+      title.className = 'success';
+      message.textContent = 'You can close this window now.';
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const error = urlParams.get('error');
     const state = urlParams.get('state');
 
     if (error) {
-      document.querySelector('.spinner').style.borderTopColor = '#ff4757';
-      document.querySelector('h1').textContent = 'Authentication Failed';
-      document.querySelector('h1').className = 'error';
-      document.querySelector('p').textContent = 'Error: ' + error + '. Please close this window and try again.';
+      showError('Error: ' + error);
     } else if (code) {
-      // Redirect to local server to complete authentication (avoids CORS)
-      window.location.href = 'http://localhost:3001/api/auth/callback?code=' + code + '&state=' + (state || '');
+      fetch('http://localhost:3003/api/oauth/receive', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code, state: state })
+      })
+      .then(res => {
+        if (res.ok) {
+          showSuccess();
+        } else {
+          showError('Server returned error: ' + res.status);
+        }
+      })
+      .catch(err => {
+        showError('Could not connect to server. Make sure the scheduler is running on port 3003.');
+      });
     } else {
-      document.querySelector('.spinner').style.borderTopColor = '#ff4757';
-      document.querySelector('h1').textContent = 'No Code Received';
-      document.querySelector('p').textContent = 'Authentication failed. Please close this window and try again.';
+      showError('No authorization code received');
     }
   </script>
 </body>
