@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Splice Audio Downloader",
+  "name": "Simple Audio",
   "version": "1.0",
-  "description": "Download audio samples from Splice.com",
+  "description": "Record Audio Samples",
   "permissions": [
     "activeTab",
     "downloads",
