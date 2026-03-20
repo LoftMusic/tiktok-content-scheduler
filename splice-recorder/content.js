@@ -16,7 +16,8 @@
   let timerInterval = null;
   let currentMode = 'oneshot';
   let currentCategory = 'kick';
-  let lastFile = null;
+  let currentBPM = null;       // User-set or detected BPM for loop sync
+  let detectedBPM = null;      // BPM auto-detected from DOM
   let detectedSampleName = null;
   let lastPlayedElement = null;
   
@@ -320,6 +321,11 @@
           <div class="ar-categories" id="ar-loop-categories" style="display: none;"></div>
         </div>
         
+        <div class="ar-section" id="ar-bpm-section" style="display:none;">
+          <div class="ar-section-title">BPM <span id="ar-bpm-detected" style="opacity:0.6;font-weight:400">(auto-detected)</span></div>
+          <div id="ar-bpm-display" style="padding:6px 10px;background:rgba(255,255,255,0.1);border-radius:6px;font-size:16px;font-weight:700;text-align:center;">—</div>
+        </div>
+        
         <div class="ar-section">
           <div class="ar-section-title">Filename (optional)</div>
           <input type="text" class="ar-filename" id="ar-filename" placeholder="Auto-generated if empty...">
@@ -345,6 +351,15 @@
           <label>Fade-out</label>
           <input type="range" id="ar-fadeout" min="0" max="200" value="50">
           <span class="ar-settings-value" id="ar-fadeout-val">50ms</span>
+        </div>
+        <div class="ar-settings" id="ar-bars-setting" style="display:none;">
+          <label>Bars</label>
+          <select id="ar-bars" style="flex:2;padding:4px;border-radius:4px;border:none;background:rgba(255,255,255,0.15);color:white;font-size:12px;">
+            <option value="2">2 bars</option>
+            <option value="4" selected>4 bars</option>
+            <option value="8">8 bars</option>
+            <option value="16">16 bars</option>
+          </select>
         </div>
         
         <div class="ar-last" id="ar-last" style="display: none;">
@@ -409,6 +424,17 @@
     } else {
       catContainer.classList.remove('loop-active');
       loopCatContainer.classList.remove('loop-active');
+    }
+    
+    // Show/hide loop-specific settings (BPM section, bars selector)
+    const bpmSection = document.querySelector('#ar-bpm-section');
+    const barsSetting = document.querySelector('#ar-bars-setting');
+    if (mode === 'loop') {
+      if (bpmSection) bpmSection.style.display = 'block';
+      if (barsSetting) barsSetting.style.display = 'flex';
+    } else {
+      if (bpmSection) bpmSection.style.display = 'none';
+      if (barsSetting) barsSetting.style.display = 'none';
     }
   }
   
@@ -566,6 +592,7 @@
         mode: currentMode,
         category: currentCategory,
         filename: filename,
+        bpm: currentBPM,
         threshold: parseInt(document.querySelector('#ar-threshold')?.value || '-40'),
         fadeout: parseInt(document.querySelector('#ar-fadeout')?.value || '50'),
         maxDuration: currentMode === 'loop' ? 60 : 30
@@ -597,8 +624,10 @@
         mode: currentMode,
         category: currentCategory,
         filename: filename,
+        bpm: currentBPM,
         threshold: parseInt(document.querySelector('#ar-threshold')?.value || '-40'),
-        fadeout: parseInt(document.querySelector('#ar-fadeout')?.value || '50')
+        fadeout: parseInt(document.querySelector('#ar-fadeout')?.value || '50'),
+        bars: currentMode === 'loop' ? parseInt(document.querySelector('#ar-bars')?.value || '4') : null
       };
       
       const recordBtn = document.querySelector('#ar-record-btn');
@@ -759,6 +788,88 @@
     return null;
   }
   
+  function detectBPMFromPage() {
+    // Scan page for BPM display - Splice shows BPM near the waveform or sample info
+    // Common patterns: "140 BPM", "140bpm", data attributes, aria labels
+    
+    // Try: waveform BPM display (usually shows BPM prominently when a sample is selected)
+    const bpmPatterns = [
+      // Direct text with BPM
+      /(\d+(?:\.\d+)?)\s*bpm/i,
+      // In aria-label or data attributes
+      /"bpm"\s*:\s*(\d+(?:\.\d+)?)/i,
+      /data-bpm\s*=\s*["'](\d+(?:\.\d+)?)/i,
+      // Splice-specific: might be in a meta tag or JSON data
+      /"tempo"\s*:\s*(\d+(?:\.\d+)?)/i,
+    ];
+    
+    const searchIn = (el) => {
+      if (!el) return null;
+      const text = el.textContent || '';
+      for (const pattern of bpmPatterns) {
+        const match = text.match(pattern);
+        if (match) return parseFloat(match[1]);
+      }
+      return null;
+    };
+    
+    // Try the focused row first
+    const focusedRow = document.querySelector(
+      '.asset-list-row.list-focused, sp-asset-row.list-focused, ' +
+      'sp-asset-row.focused, [role="row"]:focus'
+    );
+    if (focusedRow) {
+      // Look for BPM in the row
+      const bpmEl = focusedRow.querySelector(
+        '[class*="bpm"], [class*="tempo"], [class*=" BPM"], ' +
+        'sp-tag[data-type="bpm"], [data-qa*="bpm"]'
+      );
+      const bpm = searchIn(bpmEl) || searchIn(focusedRow);
+      if (bpm) return bpm;
+    }
+    
+    // Try the main waveform/info panel area
+    const mainPanel = document.querySelector(
+      'sp-workspace-detail, sp-sample-detail, sp-player, ' +
+      '[class*="detail"], [class*="player"], [class*="waveform"]'
+    );
+    if (mainPanel) {
+      const bpm = searchIn(mainPanel);
+      if (bpm) return bpm;
+    }
+    
+    // Try any element with "bpm" in class or aria-label
+    const bpmEl = document.querySelector(
+      '[class*="bpm" i], [class*=" BPM" i], [data-bpm], ' +
+      '[aria-label*="bpm" i], [title*="bpm" i], ' +
+      'sp-tag[data-type="bpm"]'
+    );
+    if (bpmEl) {
+      const bpm = searchIn(bpmEl);
+      if (bpm) return bpm;
+    }
+    
+    // Try number inputs near audio info
+    const inputs = document.querySelectorAll(
+      'input[type="number"][min="40"][max="300"], ' +
+      'input[placeholder*="BPM" i], input[placeholder*="bpm" i]'
+    );
+    for (const inp of inputs) {
+      const val = parseFloat(inp.value || inp.placeholder);
+      if (val >= 40 && val <= 300) return val;
+    }
+    
+    return null;
+  }
+  
+  function updateBPMDisplay(bpm) {
+    const display = document.querySelector('#ar-bpm-display');
+    if (display) {
+      display.textContent = bpm ? `${bpm} BPM` : '—';
+    }
+    currentBPM = bpm;
+  }
+  
   function getCategoryFromTags(tags) {
     // Check tags for category match
     for (const tag of tags) {
@@ -790,6 +901,14 @@
             const filenameInput = document.querySelector('#ar-filename');
             if (filenameInput) {
               filenameInput.value = detectedSampleName;
+            }
+            
+            // Try to detect BPM from the page
+            const bpm = detectBPMFromPage();
+            if (bpm) {
+              detectedBPM = bpm;
+              updateBPMDisplay(bpm);
+              console.log('[Audio Recorder] BPM detected:', bpm);
             }
             
             // Try to detect category from tags
