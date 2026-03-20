@@ -1,0 +1,226 @@
+{
+  name: "MIDI Player"
+  vendor: "Custom"
+  version: "1.0"
+}
+
+on init
+  message("")
+  make_perfview
+  
+  set_ui_width_px(400)
+  set_ui_height_px(350)
+  set_ui_color(000000H)
+  
+  { Constants }
+  declare const $BTN_WIDTH := 60
+  declare const $BTN_HEIGHT := 30
+  
+  { File Browser }
+  declare @file_path
+  declare @file_name
+  declare @basepath
+  
+  { Get default MIDI folder - change this path as needed }
+  @basepath := "I:/Librarii kontakt 2026/test/"
+  
+  declare ui_file_selector $file_browser
+  declare $browser_id
+  $browser_id := get_ui_id($file_browser)
+  
+  move_control_px($file_browser, 20, 20)
+  set_control_par($browser_id, $CONTROL_PAR_WIDTH, 360)
+  set_control_par($browser_id, $CONTROL_PAR_HEIGHT, 180)
+  set_control_par($browser_id, $CONTROL_PAR_FILE_TYPE, $NI_FILE_TYPE_MIDI)
+  set_control_par_str($browser_id, $CONTROL_PAR_BASEPATH, @basepath)
+  
+  { Play Button }
+  declare ui_button $play
+  set_text($play, "PLAY")
+  move_control_px($play, 20, 220)
+  set_control_par(get_ui_id($play), $CONTROL_PAR_WIDTH, $BTN_WIDTH)
+  set_control_par(get_ui_id($play), $CONTROL_PAR_HEIGHT, $BTN_HEIGHT)
+  
+  { Stop Button }
+  declare ui_button $stop
+  set_text($stop, "STOP")
+  move_control_px($stop, 100, 220)
+  set_control_par(get_ui_id($stop), $CONTROL_PAR_WIDTH, $BTN_WIDTH)
+  set_control_par(get_ui_id($stop), $CONTROL_PAR_HEIGHT, $BTN_HEIGHT)
+  
+  { Current File Display }
+  declare ui_label $file_label(5,1)
+  set_text($file_label, "No file loaded")
+  move_control_px($file_label, 20, 270)
+  
+  { Status }
+  declare ui_label $status(2,1)
+  set_text($status, "STOPPED")
+  move_control_px($status, 320, 220)
+  
+  { Octave Control }
+  declare ui_label $octave_label(1,1)
+  set_text($octave_label, "Octave")
+  move_control_px($octave_label, 20, 260)
+  
+  declare ui_knob $octave (-2, 2, 1)
+  $octave := 0
+  set_knob_label($octave, "OCT")
+  move_control_px($octave, 20, 280)
+  make_persistent($octave)
+  
+  { MIDI Player Variables }
+  declare $load_mf_id
+  declare $Track
+  declare $mf_length
+  declare $cur_song_pos
+  declare $play_flag
+  
+  { Listener }
+  declare const $LISTENER_RESOL := 24
+  declare const $BEAT_LENGTH := 960 / 24
+  set_listener($NI_SIGNAL_TIMER_BEAT, $LISTENER_RESOL)
+  set_listener($NI_SIGNAL_TRANSP_STOP, 1)
+  set_listener($NI_SIGNAL_TRANSP_START, 1)
+  
+  { Initialize }
+  $load_mf_id := -1
+  $play := 0
+  $stop := 0
+  $play_flag := 0
+  $cur_song_pos := 0
+  read_persistent_var($octave)
+  
+  message("MIDI Player ready!")
+end on
+
+{ Load MIDI File }
+function load_file
+  $play := 0
+  note_off($ALL_EVENTS)
+  
+  while ($play_flag = 1)
+    wait(1000)
+  end while
+  
+  $load_mf_id := mf_insert_file(@file_path, 0, 0, 0)
+  
+  while ($load_mf_id # -1)
+    wait(1000)
+  end while
+  
+  mf_get_first($Track)
+  mf_get_last($Track)
+  $mf_length := mf_get_pos()
+  
+  if ($mf_length <= 0)
+    $mf_length := 960 * 4
+  end if
+  
+  set_text($file_label, @file_name)
+end function
+
+{ Listener Callback }
+on listener
+  { Stop when DAW stops }
+  if ($NI_SIGNAL_TYPE = $NI_SIGNAL_TRANSP_STOP)
+    $play := 0
+    set_text($status, "STOPPED")
+    fade_out($ALL_EVENTS, 100, 1)
+    exit
+  end if
+  
+  { Start when DAW starts - auto play }
+  if ($NI_SIGNAL_TYPE = $NI_SIGNAL_TRANSP_START)
+    if ($mf_length > 0)
+      $play := 1
+      set_text($status, "PLAYING")
+      $cur_song_pos := $NI_SONG_POSITION mod $mf_length
+      mf_get_next_at($Track, $cur_song_pos)
+    end if
+    exit
+  end if
+  
+  { Play MIDI }
+  if ($play = 1 and $mf_length > 0)
+    if ($play_flag = 1)
+      wait(1)
+    end if
+    
+    $play_flag := 1
+    
+    { Use DAW position directly }
+    $cur_song_pos := $NI_SONG_POSITION mod $mf_length
+    
+    mf_get_next_at($Track, $cur_song_pos)
+    
+    while (mf_get_command() # 0 and mf_get_pos() < ($NI_SONG_POSITION + $BEAT_LENGTH) mod $mf_length)
+      if ($play = 1)
+        select (mf_get_command())
+          case $MIDI_COMMAND_NOTE_ON
+            if (mf_get_byte_two() # 0)
+              play_note(mf_get_byte_one() + ($octave * 12), mf_get_byte_two(), 0, ticks_to_ms(mf_get_note_length()))
+            end if
+          case $MIDI_COMMAND_CC
+            set_controller(mf_get_byte_one(), mf_get_byte_two())
+          case $MIDI_COMMAND_PITCH_BEND
+            set_controller($VCC_PITCH_BEND, sh_left(mf_get_byte_two(), 7) + mf_get_byte_one() - 8192)
+        end select
+      end if
+      mf_get_next($Track)
+    end while
+    
+    $play_flag := 0
+  end if
+end on
+
+{ Async Complete }
+on async_complete
+  if ($NI_ASYNC_ID = $load_mf_id)
+    $load_mf_id := -1
+    
+    if ($NI_ASYNC_EXIT_STATUS = 0)
+      message("Error loading MIDI!")
+    else
+      message("Loaded: " & @file_name)
+    end if
+  end if
+end on
+
+{ Persistence Changed }
+on persistence_changed
+  $play := 0
+end on
+
+{ File Browser Callback }
+on ui_control($file_browser)
+  @file_path := fs_get_filename($browser_id, 2)
+  @file_name := fs_get_filename($browser_id, 0)
+  call load_file
+end on
+
+{ Play Button }
+on ui_control($play)
+  if ($play = 1)
+    set_text($status, "PLAYING")
+    
+    { Get current position from DAW }
+    $cur_song_pos := $NI_SONG_POSITION
+    
+    { Adjust for file length }
+    $cur_song_pos := $cur_song_pos mod $mf_length
+    
+    mf_get_next_at($Track, $cur_song_pos)
+  else
+    set_text($status, "STOPPED")
+    fade_out($ALL_EVENTS, 500, 1)
+  end if
+end on
+
+{ Stop Button }
+on ui_control($stop)
+  $stop := 0
+  $play := 0
+  set_text($status, "STOPPED")
+  fade_out($ALL_EVENTS, 500, 1)
+end on

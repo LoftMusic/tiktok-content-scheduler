@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Audio Recorder - Splice Samples",
+  "version": "1.0",
+  "description": "Record audio from browser tabs, trim silence, organize by category",
+  "permissions": [
+    "tabCapture",
+    "downloads",
+    "storage",
+    "offscreen",
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    },
+    "default_title": "🎵 Audio Recorder - Click to show panel"
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

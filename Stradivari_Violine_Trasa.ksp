@@ -1,0 +1,50 @@
+{
+  name: "Stradivari Pro"
+  vendor: "Custom"
+  version: "1.0"
+}
+
+on init
+  set_ui_height(9)
+  make_perfview
+  
+  { Load custom knob pictures }
+  declare $knob_pic_id
+  $knob_pic_id := load_picture("knob_strip.png")
+  
+  { Variables }
+  declare $harm_id_1
+  declare $harm_id_2
+  declare $harm_id_3
+  
+  { Main Volume Knob }
+  declare ui_knob $volume (0, 100, 1)
+  $volume := 80
+  set_knob_unit($volume, $KNOB_UNIT_PERCENT)
+  set_knob_label($volume, "VOL")
+  
+  { Apply custom picture to knob }
+  set_knob_picture($volume, $knob_pic_id)
+  
+  { Other knobs... }
+  declare ui_knob $pan (-50, 50, 1)
+  $pan := 0
+  set_knob_label($pan, "PAN")
+  set_knob_picture($pan, $knob_pic_id)
+  
+  { Harmony 1 Volume }
+  declare ui_knob $harm1_vol (0, 100, 1)
+  $harm1_vol := 50
+  set_knob_unit($harm1_vol, $KNOB_UNIT_PERCENT)
+  set_knob_label($harm1_vol, "MIX")
+  set_knob_picture($harm1_vol, $knob_pic_id)
+  
+  { Harmony 2 Volume }
+  declare ui_knob $harm2_vol (0, 100, 1)
+  $harm2_vol := 50
+  set_knob_unit($harm2_vol, $KNOB_UNIT_PERCENT)
+  set_knob_label($harm2_vol, "MIX")
+  set_knob_picture($harm2_vol, $knob_pic_id)
+  
+  message("Stradivari Pro loaded!")
+end on

@@ -1,0 +1,98 @@
+{
+  name: "Stradivari Violine Trasa - Sustain Test"
+  comment: "Simple sustain test script"
+  vendor: "Custom"
+  version: "1.0"
+}
+
+{--------------------------------}
+{ DECLARE UI CONTROLS }
+{--------------------------------}
+declare ui_knob $vol_main (0, 100, 1)
+declare ui_knob $pan_main (-50, 50, 1)
+declare ui_knob $rev_mix (0, 100, 1)
+declare ui_knob $tune_adj (-100, 100, 1)
+
+{--------------------------------}
+{ INITIALIZATION }
+{--------------------------------}
+on init
+  set_ui_height(4)
+  set_ui_width_px(500)
+  
+  { Make persistent }
+  make_persistent($vol_main)
+  make_persistent($pan_main)
+  make_persistent($rev_mix)
+  make_persistent($tune_adj)
+  
+  { Default values }
+  $vol_main := 80
+  $pan_main := 0
+  $rev_mix := 25
+  $tune_adj := 0
+  
+  { Position UI }
+  move_control($vol_main, 1, 1)
+  move_control($pan_main, 2, 1)
+  move_control($rev_mix, 3, 1)
+  move_control($tune_adj, 4, 1)
+  
+  { Labels }
+  set_control_help_str($vol_main, "Volume (0-100%)")
+  set_control_help_str($pan_main, "Pan (L50 to R50)")
+  set_control_help_str($rev_mix, "Reverb Mix (0-100%)")
+  set_control_help_str($tune_adj, "Fine Tune (-100 to +100 cents)")
+  
+  { Apply settings }
+  call @update_engine
+  
+  message("Sustain Test loaded!")
+end on
+
+{--------------------------------}
+{ UPDATE ENGINE }
+{--------------------------------}
+update_engine
+  set_engine_par($ENGINE_PAR_VOLUME, ($vol_main * 8) - 800, -1, -1, -1)
+  set_engine_par($ENGINE_PAR_PAN, $pan_main * 10, -1, -1, -1)
+  set_engine_par($ENGINE_PAR_SEND_0, $rev_mix * 10, -1, -1, -1)
+  set_engine_par($ENGINE_PAR_TUNING, $tune_adj * 1000, -1, -1, -1)
+end on
+
+{--------------------------------}
+{ UI CONTROLS }
+{--------------------------------}
+on ui_control($vol_main)
+  call @update_engine
+end on
+
+on ui_control($pan_main)
+  call @update_engine
+end on
+
+on ui_control($rev_mix)
+  call @update_engine
+end on
+
+on ui_control($tune_adj)
+  call @update_engine
+end on
+
+{--------------------------------}
+{ NOTE HANDLING }
+{--------------------------------}
+on note
+  { Playable range: 55-100 }
+  select ($EVENT_NOTE)
+    case 55 to 100
+      { In range - play normally }
+      ignore_event($EVENT_ID)
+    case 101 to 127
+      { Above range - clamp to 100 }
+      play_note(100, $EVENT_VELOCITY, 0, -1)
+    case 0 to 54
+      { Below range - clamp to 55 }
+      play_note(55, $EVENT_VELOCITY, 0, -1)
+  end select
+end on

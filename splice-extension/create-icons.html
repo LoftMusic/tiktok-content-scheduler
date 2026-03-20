@@ -1,0 +1,61 @@
+<!-- Create icons using Canvas - open in browser, then save each canvas -->
+<!DOCTYPE html>
+<html>
+<head><title>Create Icons</title></head>
+<body>
+<canvas id="icon16" width="16" height="16"></canvas>
+<canvas id="icon48" width="48" height="48"></canvas>
+<canvas id="icon128" width="128" height="128"></canvas>
+<script>
+function drawIcon(canvasId, size) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  
+  // Background
+  ctx.fillStyle = '#6b46c1';
+  ctx.beginPath();
+  ctx.roundRect(0, 0, size, size, size * 0.15);
+  ctx.fill();
+  
+  // Music note
+  ctx.fillStyle = 'white';
+  const s = size / 16;
+  
+  // Note head
+  ctx.beginPath();
+  ctx.ellipse(s * 4, s * 11, s * 3, s * 2.5, -0.3, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Stem
+  ctx.fillRect(s * 6.5, s * 3, s * 2, s * 8.5);
+  
+  // Flag
+  ctx.beginPath();
+  ctx.moveTo(s * 8.5, s * 3);
+  ctx.quadraticCurveTo(s * 13, s * 5, s * 8.5, s * 8);
+  ctx.lineTo(s * 8.5, s * 3);
+  ctx.fill();
+}
+
+drawIcon('icon16', 16);
+drawIcon('icon48', 48);
+drawIcon('icon128', 128);
+
+// Download function
+function downloadCanvas(canvasId, filename) {
+  const canvas = document.getElementById(canvasId);
+  const link = document.createElement('a');
+  link.download = filename;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+// Auto-download after 1 second
+setTimeout(() => {
+  downloadCanvas('icon16', 'icon16.png');
+  setTimeout(() => downloadCanvas('icon48', 'icon48.png'), 500);
+  setTimeout(() => downloadCanvas('icon128', 'icon128.png'), 1000);
+}, 1000);
+</script>
+</body>
+</html>

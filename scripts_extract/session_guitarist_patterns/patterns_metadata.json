@@ -1,0 +1,1919 @@
+{
+  "folder": "Session Guitarist - Electric Sunburst Deluxe 1.2.0 [Native Instruments]",
+  "path": "I:\\librarii kontakt 2023\\Session Guitarist - Electric Sunburst Deluxe 1.2.0 [Native Instruments]",
+  "files": [
+    {
+      "name": "Session Guitarist - Electric Sunburst Deluxe.nicnt",
+      "extension": ".nicnt",
+      "size": 2027460
+    }
+  ],
+  "info": {
+    "subfolders": [
+      {
+        "folder": "Documentation",
+        "path": "I:\\librarii kontakt 2023\\Session Guitarist - Electric Sunburst Deluxe 1.2.0 [Native Instruments]\\Documentation",
+        "files": [
+          {
+            "name": "ELECTRIC_SUNBURST_DELUXE_Manual-en.pdf",
+            "extension": ".pdf",
+            "size": 2146142
+          }
+        ],
+        "info": {
+          "subfolders": [
+            {
+              "folder": "License Agreement",
+              "path": "I:\\librarii kontakt 2023\\Session Guitarist - Electric Sunburst Deluxe 1.2.0 [Native Instruments]\\Documentation\\License Agreement",
+              "files": [
+                {
+                  "name": "EULA_Native Instruments Deutsch.rtf",
+                  "extension": ".rtf",
+                  "size": 82493
+                },
+                {
+                  "name": "EULA_Native Instruments English.rtf",
+                  "extension": ".rtf",
+                  "size": 98590
+                },
+                {
+                  "name": "EULA_Native Instruments French.rtf",
+                  "extension": ".rtf",
+                  "size": 51395
+                },
+                {
+                  "name": "EULA_Native Instruments Japanese.rtf",
+                  "extension": ".rtf",
+                  "size": 228787
+                },
+                {
+                  "name": "ThirdPartiesSoftwareLicenses.rtf",
+                  "extension": ".rtf",
+                  "size": 31659
+                }
+              ],
+              "info": {}
+            }
+          ]
+        }
+      },
+      {
+        "folder": "Instruments",
+        "path": "I:\\librarii kontakt 2023\\Session Guitarist - Electric Sunburst Deluxe 1.2.0 [Native Instruments]\\Instruments",
+        "files": [
+          {
+            "name": "Electric Sunburst Deluxe (Melody).nki",
+            "extension": ".nki",
+            "size": 1218647
+          },
+          {
+            "name": "Electric Sunburst Deluxe.nki",
+            "extension": ".nki",
+            "size": 1213940
+          }
+        ],
+        "info": {
+          "nki_files": [
+            "Electric Sunburst Deluxe (Melody).nki",
+            "Electric Sunburst Deluxe.nki"
+          ]
+        }
+      },
+      {
+        "folder": "Samples",
+        "path": "I:\\librarii kontakt 2023\\Session Guitarist - Electric Sunburst Deluxe 1.2.0 [Native Instruments]\\Samples",
+        "files": [
+          {
+            "name": "Electric Sunburst Deluxe 1.0.nkc",
+            "extension": ".nkc",
+            "size": 54056
+          },
+          {
+            "name": "Electric Sunburst Deluxe 1.0.nkr",
+            "extension": ".nkr",
+            "size": 44232107
+          },
+          {
+            "name": "Electric Sunburst Deluxe 2.0.nkc",
+            "extension": ".nkc",
+            "size": 54130
+          },
+          {
+            "name": "Electric Sunburst Deluxe 2.0.nkr",
+            "extension": ".nkr",
+            "size": 44248359
+          },
+          {
+            "name": "Electric Sunburst Deluxe 2.1.nkc",
+            "extension": ".nkc",
+            "size": 55746
+          },
+          {
+            "name": "Electric Sunburst Deluxe 2.1.nkr",
+            "extension": ".nkr",
+            "size": 46215828
+          },
+          {
+            "name": "SGESD_0.nkc",
+            "extension": ".nkc",
+            "size": 261382
+          },
+          {
+            "name": "SGESD_0.nkx",
+            "extension": ".nkx",
+            "size": 2097165018
+          },
+          {
+            "name": "SGESD_1.nkc",
+            "extension": ".nkc",
+            "size": 360328
+          },
+          {
+            "name": "SGESD_1.nkx",
+            "extension": ".nkx",
+            "size": 2097187151
+          },
+          {
+            "name": "SGESD_2.nkc",
+            "extension": ".nkc",
+            "size": 877656
+          },
+          {
+            "name": "SGESD_2.nkx",
+            "extension": ".nkx",
+            "size": 2097855222
+          },
+          {
+            "name": "SGESD_3.nkc",
+            "extension": ".nkc",
+            "size": 83350
+          },
+          {
+            "name": "SGESD_3.nkx",
+            "extension": ".nkx",
+            "size": 350654674
+          },
+          {
+            "name": "SGESD_4.nkc",
+            "extension": ".nkc",
+            "size": 3466
+          },
+          {
+            "name": "SGESD_4.nkx",
+            "extension": ".nkx",
+            "size": 61141747
+          }
+        ],
+        "info": {
+          "subfolders": [
+            {
+              "folder": "Data",
+              "path": "I:\\librarii kontakt 2023\\Session Guitarist - Electric Sunburst Deluxe 1.2.0 [Native Instruments]\\Samples\\Data",
+              "files": [
+                {
+                  "name": "SGE1X_data0.nka",
+                  "extension": ".nka",
+                  "size": 34038
+                },
+                {
+                  "name": "SGE1X_data1.nka",
+                  "extension": ".nka",
+                  "size": 49274
+                },
+                {
+                  "name": "SGE1X_data10.nka",
+                  "extension": ".nka",
+                  "size": 35966
+                },
+                {
+                  "name": "SGE1X_data100.nka",
+                  "extension": ".nka",
+                  "size": 35920
+                },
+                {
+                  "name": "SGE1X_data101.nka",
+                  "extension": ".nka",
+                  "size": 44499
+                },
+                {
+                  "name": "SGE1X_data102.nka",
+                  "extension": ".nka",
+                  "size": 44093
+                },
+                {
+                  "name": "SGE1X_data103.nka",
+                  "extension": ".nka",
+                  "size": 33796
+                },
+                {
+                  "name": "SGE1X_data104.nka",
+                  "extension": ".nka",
+                  "size": 33979
+                },
+                {
+                  "name": "SGE1X_data105.nka",
+                  "extension": ".nka",
+                  "size": 34045
+                },
+                {
+                  "name": "SGE1X_data106.nka",
+                  "extension": ".nka",
+                  "size": 33372
+                },
+                {
+                  "name": "SGE1X_data107.nka",
+                  "extension": ".nka",
+                  "size": 34079
+                },
+                {
+                  "name": "SGE1X_data108.nka",
+                  "extension": ".nka",
+                  "size": 33444
+                },
+                {
+                  "name": "SGE1X_data109.nka",
+                  "extension": ".nka",
+                  "size": 37354
+                },
+                {
+                  "name": "SGE1X_data11.nka",
+                  "extension": ".nka",
+                  "size": 35449
+                },
+                {
+                  "name": "SGE1X_data110.nka",
+                  "extension": ".nka",
+                  "size": 37269
+                },
+                {
+                  "name": "SGE1X_data111.nka",
+                  "extension": ".nka",
+                  "size": 49484
+                },
+                {
+                  "name": "SGE1X_data112.nka",
+                  "extension": ".nka",
+                  "size": 49524
+                },
+                {
+                  "name": "SGE1X_data113.nka",
+                  "extension": ".nka",
+                  "size": 37672
+                },
+                {
+                  "name": "SGE1X_data114.nka",
+                  "extension": ".nka",
+                  "size": 33214
+                },
+                {
+                  "name": "SGE1X_data115.nka",
+                  "extension": ".nka",
+                  "size": 32957
+                },
+                {
+                  "name": "SGE1X_data116.nka",
+                  "extension": ".nka",
+                  "size": 48065
+                },
+                {
+                  "name": "SGE1X_data117.nka",
+                  "extension": ".nka",
+                  "size": 48914
+                },
+                {
+                  "name": "SGE1X_data118.nka",
+                  "extension": ".nka",
+                  "size": 48660
+                },
+                {
+                  "name": "SGE1X_data119.nka",
+                  "extension": ".nka",
+                  "size": 48252
+                },
+                {
+                  "name": "SGE1X_data12.nka",
+                  "extension": ".nka",
+                  "size": 47003
+                },
+                {
+                  "name": "SGE1X_data120.nka",
+                  "extension": ".nka",
+                  "size": 51548
+                },
+                {
+                  "name": "SGE1X_data121.nka",
+                  "extension": ".nka",
+                  "size": 30349
+                },
+                {
+                  "name": "SGE1X_data122.nka",
+                  "extension": ".nka",
+                  "size": 31147
+                },
+                {
+                  "name": "SGE1X_data123.nka",
+                  "extension": ".nka",
+                  "size": 31671
+                },
+                {
+                  "name": "SGE1X_data124.nka",
+                  "extension": ".nka",
+                  "size": 30907
+                },
+                {
+                  "name": "SGE1X_data125.nka",
+                  "extension": ".nka",
+                  "size": 37506
+                },
+                {
+                  "name": "SGE1X_data126.nka",
+                  "extension": ".nka",
+                  "size": 40607
+                },
+                {
+                  "name": "SGE1X_data127.nka",
+                  "extension": ".nka",
+                  "size": 41819
+                },
+                {
+                  "name": "SGE1X_data128.nka",
+                  "extension": ".nka",
+                  "size": 42514
+                },
+                {
+                  "name": "SGE1X_data129.nka",
+                  "extension": ".nka",
+                  "size": 42777
+                },
+                {
+                  "name": "SGE1X_data13.nka",
+                  "extension": ".nka",
+                  "size": 41637
+                },
+                {
+                  "name": "SGE1X_data130.nka",
+                  "extension": ".nka",
+                  "size": 33131
+                },
+                {
+                  "name": "SGE1X_data131.nka",
+                  "extension": ".nka",
+                  "size": 26630
+                },
+                {
+                  "name": "SGE1X_data132.nka",
+                  "extension": ".nka",
+                  "size": 26670
+                },
+                {
+                  "name": "SGE1X_data133.nka",
+                  "extension": ".nka",
+                  "size": 26672
+                },
+                {
+                  "name": "SGE1X_data134.nka",
+                  "extension": ".nka",
+                  "size": 26905
+                },
+                {
+                  "name": "SGE1X_data135.nka",
+                  "extension": ".nka",
+                  "size": 26811
+                },
+                {
+                  "name": "SGE1X_data136.nka",
+                  "extension": ".nka",
+                  "size": 26825
+                },
+                {
+                  "name": "SGE1X_data137.nka",
+                  "extension": ".nka",
+                  "size": 30477
+                },
+                {
+                  "name": "SGE1X_data138.nka",
+                  "extension": ".nka",
+                  "size": 26643
+                },
+                {
+                  "name": "SGE1X_data139.nka",
+                  "extension": ".nka",
+                  "size": 29143
+                },
+                {
+                  "name": "SGE1X_data14.nka",
+                  "extension": ".nka",
+                  "size": 41977
+                },
+                {
+                  "name": "SGE1X_data140.nka",
+                  "extension": ".nka",
+                  "size": 29219
+                },
+                {
+                  "name": "SGE1X_data141.nka",
+                  "extension": ".nka",
+                  "size": 29265
+                },
+                {
+                  "name": "SGE1X_data142.nka",
+                  "extension": ".nka",
+                  "size": 29092
+                },
+                {
+                  "name": "SGE1X_data143.nka",
+                  "extension": ".nka",
+                  "size": 30573
+                },
+                {
+                  "name": "SGE1X_data144.nka",
+                  "extension": ".nka",
+                  "size": 49332
+                },
+                {
+                  "name": "SGE1X_data145.nka",
+                  "extension": ".nka",
+                  "size": 49340
+                },
+                {
+                  "name": "SGE1X_data146.nka",
+                  "extension": ".nka",
+                  "size": 49336
+                },
+                {
+                  "name": "SGE1X_data147.nka",
+                  "extension": ".nka",
+                  "size": 49336
+                },
+                {
+                  "name": "SGE1X_data148.nka",
+                  "extension": ".nka",
+                  "size": 49336
+                },
+                {
+                  "name": "SGE1X_data149.nka",
+                  "extension": ".nka",
+                  "size": 49049
+                },
+                {
+                  "name": "SGE1X_data15.nka",
+                  "extension": ".nka",
+                  "size": 40973
+                },
+                {
+                  "name": "SGE1X_data150.nka",
+                  "extension": ".nka",
+                  "size": 49329
+                },
+                {
+                  "name": "SGE1X_data151.nka",
+                  "extension": ".nka",
+                  "size": 49048
+                },
+                {
+                  "name": "SGE1X_data152.nka",
+                  "extension": ".nka",
+                  "size": 44784
+                },
+                {
+                  "name": "SGE1X_data153.nka",
+                  "extension": ".nka",
+                  "size": 43222
+                },
+                {
+                  "name": "SGE1X_data154.nka",
+                  "extension": ".nka",
+                  "size": 43947
+                },
+                {
+                  "name": "SGE1X_data155.nka",
+                  "extension": ".nka",
+                  "size": 34294
+                },
+                {
+                  "name": "SGE1X_data156.nka",
+                  "extension": ".nka",
+                  "size": 34061
+                },
+                {
+                  "name": "SGE1X_data157.nka",
+                  "extension": ".nka",
+                  "size": 35109
+                },
+                {
+                  "name": "SGE1X_data158.nka",
+                  "extension": ".nka",
+                  "size": 33688
+                },
+                {
+                  "name": "SGE1X_data159.nka",
+                  "extension": ".nka",
+                  "size": 35028
+                },
+                {
+                  "name": "SGE1X_data16.nka",
+                  "extension": ".nka",
+                  "size": 46808
+                },
+                {
+                  "name": "SGE1X_data160.nka",
+                  "extension": ".nka",
+                  "size": 32161
+                },
+                {
+                  "name": "SGE1X_data161.nka",
+                  "extension": ".nka",
+                  "size": 34875
+                },
+                {
+                  "name": "SGE1X_data162.nka",
+                  "extension": ".nka",
+                  "size": 33055
+                },
+                {
+                  "name": "SGE1X_data163.nka",
+                  "extension": ".nka",
+                  "size": 32110
+                },
+                {
+                  "name": "SGE1X_data164.nka",
+                  "extension": ".nka",
+                  "size": 31867
+                },
+                {
+                  "name": "SGE1X_data165.nka",
+                  "extension": ".nka",
+                  "size": 33758
+                },
+                {
+                  "name": "SGE1X_data166.nka",
+                  "extension": ".nka",
+                  "size": 32114
+                },
+                {
+                  "name": "SGE1X_data167.nka",
+                  "extension": ".nka",
+                  "size": 32737
+                },
+                {
+                  "name": "SGE1X_data168.nka",
+                  "extension": ".nka",
+                  "size": 32456
+                },
+                {
+                  "name": "SGE1X_data169.nka",
+                  "extension": ".nka",
+                  "size": 32804
+                },
+                {
+                  "name": "SGE1X_data17.nka",
+                  "extension": ".nka",
+                  "size": 42149
+                },
+                {
+                  "name": "SGE1X_data170.nka",
+                  "extension": ".nka",
+                  "size": 33167
+                },
+                {
+                  "name": "SGE1X_data171.nka",
+                  "extension": ".nka",
+                  "size": 32440
+                },
+                {
+                  "name": "SGE1X_data172.nka",
+                  "extension": ".nka",
+                  "size": 32610
+                },
+                {
+                  "name": "SGE1X_data173.nka",
+                  "extension": ".nka",
+                  "size": 33554
+                },
+                {
+                  "name": "SGE1X_data174.nka",
+                  "extension": ".nka",
+                  "size": 33592
+                },
+                {
+                  "name": "SGE1X_data175.nka",
+                  "extension": ".nka",
+                  "size": 33527
+                },
+                {
+                  "name": "SGE1X_data176.nka",
+                  "extension": ".nka",
+                  "size": 33410
+                },
+                {
+                  "name": "SGE1X_data177.nka",
+                  "extension": ".nka",
+                  "size": 46764
+                },
+                {
+                  "name": "SGE1X_data178.nka",
+                  "extension": ".nka",
+                  "size": 32594
+                },
+                {
+                  "name": "SGE1X_data179.nka",
+                  "extension": ".nka",
+                  "size": 32281
+                },
+                {
+                  "name": "SGE1X_data18.nka",
+                  "extension": ".nka",
+                  "size": 42941
+                },
+                {
+                  "name": "SGE1X_data180.nka",
+                  "extension": ".nka",
+                  "size": 32638
+                },
+                {
+                  "name": "SGE1X_data181.nka",
+                  "extension": ".nka",
+                  "size": 32405
+                },
+                {
+                  "name": "SGE1X_data182.nka",
+                  "extension": ".nka",
+                  "size": 48913
+                },
+                {
+                  "name": "SGE1X_data183.nka",
+                  "extension": ".nka",
+                  "size": 49314
+                },
+                {
+                  "name": "SGE1X_data184.nka",
+                  "extension": ".nka",
+                  "size": 46180
+                },
+                {
+                  "name": "SGE1X_data185.nka",
+                  "extension": ".nka",
+                  "size": 48469
+                },
+                {
+                  "name": "SGE1X_data186.nka",
+                  "extension": ".nka",
+                  "size": 48709
+                },
+                {
+                  "name": "SGE1X_data187.nka",
+                  "extension": ".nka",
+                  "size": 47846
+                },
+                {
+                  "name": "SGE1X_data188.nka",
+                  "extension": ".nka",
+                  "size": 48510
+                },
+                {
+                  "name": "SGE1X_data189.nka",
+                  "extension": ".nka",
+                  "size": 48248
+                },
+                {
+                  "name": "SGE1X_data19.nka",
+                  "extension": ".nka",
+                  "size": 47162
+                },
+                {
+                  "name": "SGE1X_data190.nka",
+                  "extension": ".nka",
+                  "size": 47285
+                },
+                {
+                  "name": "SGE1X_data191.nka",
+                  "extension": ".nka",
+                  "size": 46553
+                },
+                {
+                  "name": "SGE1X_data192.nka",
+                  "extension": ".nka",
+                  "size": 45983
+                },
+                {
+                  "name": "SGE1X_data193.nka",
+                  "extension": ".nka",
+                  "size": 48744
+                },
+                {
+                  "name": "SGE1X_data194.nka",
+                  "extension": ".nka",
+                  "size": 49228
+                },
+                {
+                  "name": "SGE1X_data195.nka",
+                  "extension": ".nka",
+                  "size": 48769
+                },
+                {
+                  "name": "SGE1X_data196.nka",
+                  "extension": ".nka",
+                  "size": 49045
+                },
+                {
+                  "name": "SGE1X_data197.nka",
+                  "extension": ".nka",
+                  "size": 47555
+                },
+                {
+                  "name": "SGE1X_data198.nka",
+                  "extension": ".nka",
+                  "size": 47715
+                },
+                {
+                  "name": "SGE1X_data199.nka",
+                  "extension": ".nka",
+                  "size": 48196
+                },
+                {
+                  "name": "SGE1X_data2.nka",
+                  "extension": ".nka",
+                  "size": 49387
+                },
+                {
+                  "name": "SGE1X_data20.nka",
+                  "extension": ".nka",
+                  "size": 48667
+                },
+                {
+                  "name": "SGE1X_data200.nka",
+                  "extension": ".nka",
+                  "size": 48703
+                },
+                {
+                  "name": "SGE1X_data201.nka",
+                  "extension": ".nka",
+                  "size": 47917
+                },
+                {
+                  "name": "SGE1X_data202.nka",
+                  "extension": ".nka",
+                  "size": 46446
+                },
+                {
+                  "name": "SGE1X_data203.nka",
+                  "extension": ".nka",
+                  "size": 46282
+                },
+                {
+                  "name": "SGE1X_data204.nka",
+                  "extension": ".nka",
+                  "size": 48062
+                },
+                {
+                  "name": "SGE1X_data205.nka",
+                  "extension": ".nka",
+                  "size": 47713
+                },
+                {
+                  "name": "SGE1X_data206.nka",
+                  "extension": ".nka",
+                  "size": 49184
+                },
+                {
+                  "name": "SGE1X_data207.nka",
+                  "extension": ".nka",
+                  "size": 46761
+                },
+                {
+                  "name": "SGE1X_data208.nka",
+                  "extension": ".nka",
+                  "size": 47056
+                },
+                {
+                  "name": "SGE1X_data209.nka",
+                  "extension": ".nka",
+                  "size": 33201
+                },
+                {
+                  "name": "SGE1X_data21.nka",
+                  "extension": ".nka",
+                  "size": 48666
+                },
+                {
+                  "name": "SGE1X_data210.nka",
+                  "extension": ".nka",
+                  "size": 33348
+                },
+                {
+                  "name": "SGE1X_data211.nka",
+                  "extension": ".nka",
+                  "size": 41845
+                },
+                {
+                  "name": "SGE1X_data212.nka",
+                  "extension": ".nka",
+                  "size": 30385
+                },
+                {
+                  "name": "SGE1X_data213.nka",
+                  "extension": ".nka",
+                  "size": 35411
+                },
+                {
+                  "name": "SGE1X_data214.nka",
+                  "extension": ".nka",
+                  "size": 31707
+                },
+                {
+                  "name": "SGE1X_data215.nka",
+                  "extension": ".nka",
+                  "size": 34256
+                },
+                {
+                  "name": "SGE1X_data216.nka",
+                  "extension": ".nka",
+                  "size": 34189
+                },
+                {
+                  "name": "SGE1X_data217.nka",
+                  "extension": ".nka",
+                  "size": 33167
+                },
+                {
+                  "name": "SGE1X_data218.nka",
+                  "extension": ".nka",
+                  "size": 40644
+                },
+                {
+                  "name": "SGE1X_data219.nka",
+                  "extension": ".nka",
+                  "size": 47039
+                },
+                {
+                  "name": "SGE1X_data22.nka",
+                  "extension": ".nka",
+                  "size": 48427
+                },
+                {
+                  "name": "SGE1X_data220.nka",
+                  "extension": ".nka",
+                  "size": 32759
+                },
+                {
+                  "name": "SGE1X_data221.nka",
+                  "extension": ".nka",
+                  "size": 32483
+                },
+                {
+                  "name": "SGE1X_data222.nka",
+                  "extension": ".nka",
+                  "size": 32830
+                },
+                {
+                  "name": "SGE1X_data223.nka",
+                  "extension": ".nka",
+                  "size": 36409
+                },
+                {
+                  "name": "SGE1X_data224.nka",
+                  "extension": ".nka",
+                  "size": 33555
+                },
+                {
+                  "name": "SGE1X_data225.nka",
+                  "extension": ".nka",
+                  "size": 33438
+                },
+                {
+                  "name": "SGE1X_data226.nka",
+                  "extension": ".nka",
+                  "size": 37390
+                },
+                {
+                  "name": "SGE1X_data227.nka",
+                  "extension": ".nka",
+                  "size": 42541
+                },
+                {
+                  "name": "SGE1X_data228.nka",
+                  "extension": ".nka",
+                  "size": 29147
+                },
+                {
+                  "name": "SGE1X_data229.nka",
+                  "extension": ".nka",
+                  "size": 29223
+                },
+                {
+                  "name": "SGE1X_data23.nka",
+                  "extension": ".nka",
+                  "size": 48427
+                },
+                {
+                  "name": "SGE1X_data230.nka",
+                  "extension": ".nka",
+                  "size": 29269
+                },
+                {
+                  "name": "SGE1X_data231.nka",
+                  "extension": ".nka",
+                  "size": 42814
+                },
+                {
+                  "name": "SGE1X_data232.nka",
+                  "extension": ".nka",
+                  "size": 30944
+                },
+                {
+                  "name": "SGE1X_data233.nka",
+                  "extension": ".nka",
+                  "size": 35481
+                },
+                {
+                  "name": "SGE1X_data234.nka",
+                  "extension": ".nka",
+                  "size": 37542
+                },
+                {
+                  "name": "SGE1X_data235.nka",
+                  "extension": ".nka",
+                  "size": 37545
+                },
+                {
+                  "name": "SGE1X_data236.nka",
+                  "extension": ".nka",
+                  "size": 36002
+                },
+                {
+                  "name": "SGE1X_data237.nka",
+                  "extension": ".nka",
+                  "size": 35196
+                },
+                {
+                  "name": "SGE1X_data24.nka",
+                  "extension": ".nka",
+                  "size": 35237
+                },
+                {
+                  "name": "SGE1X_data25.nka",
+                  "extension": ".nka",
+                  "size": 35133
+                },
+                {
+                  "name": "SGE1X_data26.nka",
+                  "extension": ".nka",
+                  "size": 33058
+                },
+                {
+                  "name": "SGE1X_data27.nka",
+                  "extension": ".nka",
+                  "size": 32340
+                },
+                {
+                  "name": "SGE1X_data28.nka",
+                  "extension": ".nka",
+                  "size": 32814
+                },
+                {
+                  "name": "SGE1X_data29.nka",
+                  "extension": ".nka",
+                  "size": 32857
+                },
+                {
+                  "name": "SGE1X_data3.nka",
+                  "extension": ".nka",
+                  "size": 49260
+                },
+                {
+                  "name": "SGE1X_data30.nka",
+                  "extension": ".nka",
+                  "size": 32562
+                },
+                {
+                  "name": "SGE1X_data31.nka",
+                  "extension": ".nka",
+                  "size": 32524
+                },
+                {
+                  "name": "SGE1X_data32.nka",
+                  "extension": ".nka",
+                  "size": 46669
+                },
+                {
+                  "name": "SGE1X_data33.nka",
+                  "extension": ".nka",
+                  "size": 46385
+                },
+                {
+                  "name": "SGE1X_data34.nka",
+                  "extension": ".nka",
+                  "size": 47692
+                },
+                {
+                  "name": "SGE1X_data35.nka",
+                  "extension": ".nka",
+                  "size": 46798
+                },
+                {
+                  "name": "SGE1X_data36.nka",
+                  "extension": ".nka",
+                  "size": 32528
+                },
+                {
+                  "name": "SGE1X_data37.nka",
+                  "extension": ".nka",
+                  "size": 33764
+                },
+                {
+                  "name": "SGE1X_data38.nka",
+                  "extension": ".nka",
+                  "size": 33949
+                },
+                {
+                  "name": "SGE1X_data39.nka",
+                  "extension": ".nka",
+                  "size": 33083
+                },
+                {
+                  "name": "SGE1X_data4.nka",
+                  "extension": ".nka",
+                  "size": 49303
+                },
+                {
+                  "name": "SGE1X_data40.nka",
+                  "extension": ".nka",
+                  "size": 49268
+                },
+                {
+                  "name": "SGE1X_data41.nka",
+                  "extension": ".nka",
+                  "size": 38226
+                },
+                {
+                  "name": "SGE1X_data42.nka",
+                  "extension": ".nka",
+                  "size": 41005
+                },
+                {
+                  "name": "SGE1X_data43.nka",
+                  "extension": ".nka",
+                  "size": 35312
+                },
+                {
+                  "name": "SGE1X_data44.nka",
+                  "extension": ".nka",
+                  "size": 35558
+                },
+                {
+                  "name": "SGE1X_data45.nka",
+                  "extension": ".nka",
+                  "size": 36373
+                },
+                {
+                  "name": "SGE1X_data46.nka",
+                  "extension": ".nka",
+                  "size": 35817
+                },
+                {
+                  "name": "SGE1X_data47.nka",
+                  "extension": ".nka",
+                  "size": 35163
+                },
+                {
+                  "name": "SGE1X_data48.nka",
+                  "extension": ".nka",
+                  "size": 35374
+                },
+                {
+                  "name": "SGE1X_data49.nka",
+                  "extension": ".nka",
+                  "size": 46796
+                },
+                {
+                  "name": "SGE1X_data5.nka",
+                  "extension": ".nka",
+                  "size": 35453
+                },
+                {
+                  "name": "SGE1X_data50.nka",
+                  "extension": ".nka",
+                  "size": 41513
+                },
+                {
+                  "name": "SGE1X_data51.nka",
+                  "extension": ".nka",
+                  "size": 46721
+                },
+                {
+                  "name": "SGE1X_data52.nka",
+                  "extension": ".nka",
+                  "size": 42092
+                },
+                {
+                  "name": "SGE1X_data53.nka",
+                  "extension": ".nka",
+                  "size": 29495
+                },
+                {
+                  "name": "SGE1X_data54.nka",
+                  "extension": ".nka",
+                  "size": 46440
+                },
+                {
+                  "name": "SGE1X_data55.nka",
+                  "extension": ".nka",
+                  "size": 41861
+                },
+                {
+                  "name": "SGE1X_data56.nka",
+                  "extension": ".nka",
+                  "size": 45427
+                },
+                {
+                  "name": "SGE1X_data57.nka",
+                  "extension": ".nka",
+                  "size": 41169
+                },
+                {
+                  "name": "SGE1X_data58.nka",
+                  "extension": ".nka",
+                  "size": 44219
+                },
+                {
+                  "name": "SGE1X_data59.nka",
+                  "extension": ".nka",
+                  "size": 40229
+                },
+                {
+                  "name": "SGE1X_data6.nka",
+                  "extension": ".nka",
+                  "size": 35215
+                },
+                {
+                  "name": "SGE1X_data60.nka",
+                  "extension": ".nka",
+                  "size": 44151
+                },
+                {
+                  "name": "SGE1X_data61.nka",
+                  "extension": ".nka",
+                  "size": 39798
+                },
+                {
+                  "name": "SGE1X_data62.nka",
+                  "extension": ".nka",
+                  "size": 32868
+                },
+                {
+                  "name": "SGE1X_data63.nka",
+                  "extension": ".nka",
+                  "size": 30440
+                },
+                {
+                  "name": "SGE1X_data64.nka",
+                  "extension": ".nka",
+                  "size": 49219
+                },
+                {
+                  "name": "SGE1X_data65.nka",
+                  "extension": ".nka",
+                  "size": 49040
+                },
+                {
+                  "name": "SGE1X_data66.nka",
+                  "extension": ".nka",
+                  "size": 45185
+                },
+                {
+                  "name": "SGE1X_data67.nka",
+                  "extension": ".nka",
+                  "size": 37473
+                },
+                {
+                  "name": "SGE1X_data68.nka",
+                  "extension": ".nka",
+                  "size": 46884
+                },
+                {
+                  "name": "SGE1X_data69.nka",
+                  "extension": ".nka",
+                  "size": 47383
+                },
+                {
+                  "name": "SGE1X_data7.nka",
+                  "extension": ".nka",
+                  "size": 36648
+                },
+                {
+                  "name": "SGE1X_data70.nka",
+                  "extension": ".nka",
+                  "size": 33619
+                },
+                {
+                  "name": "SGE1X_data71.nka",
+                  "extension": ".nka",
+                  "size": 35688
+                },
+                {
+                  "name": "SGE1X_data72.nka",
+                  "extension": ".nka",
+                  "size": 48739
+                },
+                {
+                  "name": "SGE1X_data73.nka",
+                  "extension": ".nka",
+                  "size": 36108
+                },
+                {
+                  "name": "SGE1X_data74.nka",
+                  "extension": ".nka",
+                  "size": 35703
+                },
+                {
+                  "name": "SGE1X_data75.nka",
+                  "extension": ".nka",
+                  "size": 36054
+                },
+                {
+                  "name": "SGE1X_data76.nka",
+                  "extension": ".nka",
+                  "size": 48379
+                },
+                {
+                  "name": "SGE1X_data77.nka",
+                  "extension": ".nka",
+                  "size": 35692
+                },
+                {
+                  "name": "SGE1X_data78.nka",
+                  "extension": ".nka",
+                  "size": 50100
+                },
+                {
+                  "name": "SGE1X_data79.nka",
+                  "extension": ".nka",
+                  "size": 46599
+                },
+                {
+                  "name": "SGE1X_data8.nka",
+                  "extension": ".nka",
+                  "size": 37509
+                },
+                {
+                  "name": "SGE1X_data80.nka",
+                  "extension": ".nka",
+                  "size": 49899
+                },
+                {
+                  "name": "SGE1X_data81.nka",
+                  "extension": ".nka",
+                  "size": 50060
+                },
+                {
+                  "name": "SGE1X_data82.nka",
+                  "extension": ".nka",
+                  "size": 49900
+                },
+                {
+                  "name": "SGE1X_data83.nka",
+                  "extension": ".nka",
+                  "size": 46100
+                },
+                {
+                  "name": "SGE1X_data84.nka",
+                  "extension": ".nka",
+                  "size": 50340
+                },
+                {
+                  "name": "SGE1X_data85.nka",
+                  "extension": ".nka",
+                  "size": 46800
+                },
+                {
+                  "name": "SGE1X_data86.nka",
+                  "extension": ".nka",
+                  "size": 48060
+                },
+                {
+                  "name": "SGE1X_data87.nka",
+                  "extension": ".nka",
+                  "size": 47341
+                },
+                {
+                  "name": "SGE1X_data88.nka",
+                  "extension": ".nka",
+                  "size": 47263
+                },
+                {
+                  "name": "SGE1X_data89.nka",
+                  "extension": ".nka",
+                  "size": 47381
+                },
+                {
+                  "name": "SGE1X_data9.nka",
+                  "extension": ".nka",
+                  "size": 35265
+                },
+                {
+                  "name": "SGE1X_data90.nka",
+                  "extension": ".nka",
+                  "size": 49861
+                },
+                {
+                  "name": "SGE1X_data91.nka",
+                  "extension": ".nka",
+                  "size": 46661
+                },
+                {
+                  "name": "SGE1X_data92.nka",
+                  "extension": ".nka",
+                  "size": 33862
+                },
+                {
+                  "name": "SGE1X_data93.nka",
+                  "extension": ".nka",
+                  "size": 32908
+                },
+                {
+                  "name": "SGE1X_data94.nka",
+                  "extension": ".nka",
+                  "size": 33575
+                },
+                {
+                  "name": "SGE1X_data95.nka",
+                  "extension": ".nka",
+                  "size": 33514
+                },
+                {
+                  "name": "SGE1X_data96.nka",
+                  "extension": ".nka",
+                  "size": 28884
+                },
+                {
+                  "name": "SGE1X_data97.nka",
+                  "extension": ".nka",
+                  "size": 49139
+                },
+                {
+                  "name": "SGE1X_data98.nka",
+                  "extension": ".nka",
+                  "size": 49023
+                },
+                {
+                  "name": "SGE1X_data99.nka",
+                  "extension": ".nka",
+                  "size": 49029
+                },
+                {
+                  "name": "SGE1X_Progressions.mid",
+                  "extension": ".mid",
+                  "size": 157846
+                }
+              ],
+              "info": {}
+            }
+          ]
+        }
+      },
+      {
+        "folder": "Snapshots",
+        "path": "I:\\librarii kontakt 2023\\Session Guitarist - Electric Sunburst Deluxe 1.2.0 [Native Instruments]\\Snapshots",
+        "files": [],
+        "info": {
+          "subfolders": [
+            {
+              "folder": "Electric Sunburst Deluxe",
+              "path": "I:\\librarii kontakt 2023\\Session Guitarist - Electric Sunburst Deluxe 1.2.0 [Native Instruments]\\Snapshots\\Electric Sunburst Deluxe",
+              "files": [
+                {
+                  "name": "3-4 Arpeggio.nksn",
+                  "extension": ".nksn",
+                  "size": 12728
+                },
+                {
+                  "name": "3-4 Strummer.nksn",
+                  "extension": ".nksn",
+                  "size": 12974
+                },
+                {
+                  "name": "Airplay.nksn",
+                  "extension": ".nksn",
+                  "size": 12515
+                },
+                {
+                  "name": "Americana.nksn",
+                  "extension": ".nksn",
+                  "size": 12857
+                },
+                {
+                  "name": "Arcade.nksn",
+                  "extension": ".nksn",
+                  "size": 12497
+                },
+                {
+                  "name": "Area 51.nksn",
+                  "extension": ".nksn",
+                  "size": 12408
+                },
+                {
+                  "name": "Basic Rock.nksn",
+                  "extension": ".nksn",
+                  "size": 12493
+                },
+                {
+                  "name": "Blue.nksn",
+                  "extension": ".nksn",
+                  "size": 12777
+                },
+                {
+                  "name": "Blues (Swing).nksn",
+                  "extension": ".nksn",
+                  "size": 12833
+                },
+                {
+                  "name": "Blues.nksn",
+                  "extension": ".nksn",
+                  "size": 12447
+                },
+                {
+                  "name": "Bollywood.nksn",
+                  "extension": ".nksn",
+                  "size": 12382
+                },
+                {
+                  "name": "Bonfire.nksn",
+                  "extension": ".nksn",
+                  "size": 12369
+                },
+                {
+                  "name": "Break of Dawn.nksn",
+                  "extension": ".nksn",
+                  "size": 12493
+                },
+                {
+                  "name": "Clear All Slots.nksn",
+                  "extension": ".nksn",
+                  "size": 11477
+                },
+                {
+                  "name": "Crescendo.nksn",
+                  "extension": ".nksn",
+                  "size": 12610
+                },
+                {
+                  "name": "Dark Highway.nksn",
+                  "extension": ".nksn",
+                  "size": 12683
+                },
+                {
+                  "name": "Dark Matter.nksn",
+                  "extension": ".nksn",
+                  "size": 12537
+                },
+                {
+                  "name": "Flageolet Arpeggio.nksn",
+                  "extension": ".nksn",
+                  "size": 12318
+                },
+                {
+                  "name": "Free Horses.nksn",
+                  "extension": ".nksn",
+                  "size": 12405
+                },
+                {
+                  "name": "Harmonic Glissando.nksn",
+                  "extension": ".nksn",
+                  "size": 12879
+                },
+                {
+                  "name": "Hit Factor.nksn",
+                  "extension": ".nksn",
+                  "size": 12371
+                },
+                {
+                  "name": "Hot Funk.nksn",
+                  "extension": ".nksn",
+                  "size": 12622
+                },
+                {
+                  "name": "Ibiza.nksn",
+                  "extension": ".nksn",
+                  "size": 12689
+                },
+                {
+                  "name": "Impossible.nksn",
+                  "extension": ".nksn",
+                  "size": 12278
+                },
+                {
+                  "name": "In the Clouds.nksn",
+                  "extension": ".nksn",
+                  "size": 12365
+                },
+                {
+                  "name": "Latin Love.nksn",
+                  "extension": ".nksn",
+                  "size": 12599
+                },
+                {
+                  "name": "Main Stage.nksn",
+                  "extension": ".nksn",
+                  "size": 12787
+                },
+                {
+                  "name": "More Gain.nksn",
+                  "extension": ".nksn",
+                  "size": 12330
+                },
+                {
+                  "name": "Morning Sun.nksn",
+                  "extension": ".nksn",
+                  "size": 12864
+                },
+                {
+                  "name": "Old Ranch.nksn",
+                  "extension": ".nksn",
+                  "size": 12294
+                },
+                {
+                  "name": "Prime Time.nksn",
+                  "extension": ".nksn",
+                  "size": 12616
+                },
+                {
+                  "name": "Pure.nksn",
+                  "extension": ".nksn",
+                  "size": 12540
+                },
+                {
+                  "name": "Reggae.nksn",
+                  "extension": ".nksn",
+                  "size": 12726
+                },
+                {
+                  "name": "Reverse Clouds.nksn",
+                  "extension": ".nksn",
+                  "size": 12470
+                },
+                {
+                  "name": "Reverse EDM.nksn",
+                  "extension": ".nksn",
+                  "size": 12351
+                },
+                {
+                  "name": "Reverse Score.nksn",
+                  "extension": ".nksn",
+                  "size": 12377
+                },
+                {
+                  "name": "Reverse Thrust.nksn",
+                  "extension": ".nksn",
+                  "size": 12252
+                },
+                {
+                  "name": "Reverse Triplets.nksn",
+                  "extension": ".nksn",
+                  "size": 12481
+                },
+                {
+                  "name": "RnB Classics.nksn",
+                  "extension": ".nksn",
+                  "size": 12913
+                },
+                {
+                  "name": "Rock Ballad.nksn",
+                  "extension": ".nksn",
+                  "size": 12803
+                },
+                {
+                  "name": "Rock Hard.nksn",
+                  "extension": ".nksn",
+                  "size": 12207
+                },
+                {
+                  "name": "Rock School.nksn",
+                  "extension": ".nksn",
+                  "size": 12335
+                },
+                {
+                  "name": "Rock Show.nksn",
+                  "extension": ".nksn",
+                  "size": 12306
+                },
+                {
+                  "name": "Rocker.nksn",
+                  "extension": ".nksn",
+                  "size": 12405
+                },
+                {
+                  "name": "Scratches.nksn",
+                  "extension": ".nksn",
+                  "size": 12438
+                },
+                {
+                  "name": "Southern Shuffle.nksn",
+                  "extension": ".nksn",
+                  "size": 12693
+                },
+                {
+                  "name": "Straightforward.nksn",
+                  "extension": ".nksn",
+                  "size": 12236
+                },
+                {
+                  "name": "Sweet Love.nksn",
+                  "extension": ".nksn",
+                  "size": 12468
+                },
+                {
+                  "name": "Tequila Bar.nksn",
+                  "extension": ".nksn",
+                  "size": 12557
+                },
+                {
+                  "name": "Toolbox.nksn",
+                  "extension": ".nksn",
+                  "size": 12447
+                },
+                {
+                  "name": "Triple Energy.nksn",
+                  "extension": ".nksn",
+                  "size": 12779
+                },
+                {
+                  "name": "Wanderlust.nksn",
+                  "extension": ".nksn",
+                  "size": 12576
+                }
+              ],
+              "info": {}
+            },
+            {
+              "folder": "Electric Sunburst Deluxe (Melody)",
+              "path": "I:\\librarii kontakt 2023\\Session Guitarist - Electric Sunburst Deluxe 1.2.0 [Native Instruments]\\Snapshots\\Electric Sunburst Deluxe (Melody)",
+              "files": [
+                {
+                  "name": "3-4 Arpeggio (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12557
+                },
+                {
+                  "name": "3-4 Strummer (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12904
+                },
+                {
+                  "name": "Airplay (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12753
+                },
+                {
+                  "name": "Americana (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12970
+                },
+                {
+                  "name": "Arcade (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12359
+                },
+                {
+                  "name": "Area 51 (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12595
+                },
+                {
+                  "name": "Basic Rock (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12725
+                },
+                {
+                  "name": "Blue (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12643
+                },
+                {
+                  "name": "Blues (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12536
+                },
+                {
+                  "name": "Blues (Swing) (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12647
+                },
+                {
+                  "name": "Bollywood (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12711
+                },
+                {
+                  "name": "Bonfire (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12477
+                },
+                {
+                  "name": "Break of Dawn (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12641
+                },
+                {
+                  "name": "Clear All Slots (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 11745
+                },
+                {
+                  "name": "Crescendo (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12526
+                },
+                {
+                  "name": "Dark Highway (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12899
+                },
+                {
+                  "name": "Dark Matter (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12762
+                },
+                {
+                  "name": "Flageolet Arpeggio (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12441
+                },
+                {
+                  "name": "Free Horses (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12548
+                },
+                {
+                  "name": "Harmonic Glissando (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12959
+                },
+                {
+                  "name": "Hit Factor (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12527
+                },
+                {
+                  "name": "Hot Funk (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12871
+                },
+                {
+                  "name": "Ibiza (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12550
+                },
+                {
+                  "name": "Impossible (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12362
+                },
+                {
+                  "name": "In the Clouds (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12452
+                },
+                {
+                  "name": "Latin Love (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12680
+                },
+                {
+                  "name": "Main Stage (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12912
+                },
+                {
+                  "name": "More Gain (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12524
+                },
+                {
+                  "name": "Morning Sun (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 13026
+                },
+                {
+                  "name": "Old Ranch (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12459
+                },
+                {
+                  "name": "Prime Time (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12755
+                },
+                {
+                  "name": "Pure (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12682
+                },
+                {
+                  "name": "Reggae (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12714
+                },
+                {
+                  "name": "Reverse Clouds (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12615
+                },
+                {
+                  "name": "Reverse EDM (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12581
+                },
+                {
+                  "name": "Reverse Score (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12596
+                },
+                {
+                  "name": "Reverse Thrust (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12479
+                },
+                {
+                  "name": "Reverse Triplets (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12591
+                },
+                {
+                  "name": "RnB Classics (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12591
+                },
+                {
+                  "name": "Rock Ballad (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12595
+                },
+                {
+                  "name": "Rock Hard (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12343
+                },
+                {
+                  "name": "Rock School (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12413
+                },
+                {
+                  "name": "Rock Show (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12399
+                },
+                {
+                  "name": "Rocker (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12491
+                },
+                {
+                  "name": "Scratches (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12411
+                },
+                {
+                  "name": "Southern Shuffle (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 13000
+                },
+                {
+                  "name": "Straightforward (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12376
+                },
+                {
+                  "name": "Sweet Love (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12544
+                },
+                {
+                  "name": "Tequila Bar (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12447
+                },
+                {
+                  "name": "Toolbox (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12485
+                },
+                {
+                  "name": "Triple Energy (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12669
+                },
+                {
+                  "name": "Wanderlust (Melody).nksn",
+                  "extension": ".nksn",
+                  "size": 12567
+                }
+              ],
+              "info": {}
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

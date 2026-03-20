@@ -1,0 +1,146 @@
+# KSP Reference - Key Syntax
+
+## Variables
+```
+declare $int_var          { integer }
+declare ~real_var         { real number }
+declare %int_array[100]   { integer array }
+declare ?real_array[100]   { real array }
+declare @string_var        { string }
+declare !string_array[10] { string array }
+declare const $CONST := 10 { constant }
+declare polyphonic $poly   { per-note variable }
+```
+
+## Callbacks
+```
+on init
+  { runs when script loads }
+end on
+
+on note
+  { runs when note is played }
+end on
+
+on release
+  { runs when note is released }
+end on
+
+on ui_control ($control_name)
+  { runs when UI control changes }
+end on
+```
+
+## UI Widgets
+```
+declare ui_knob $knob (0, 100, 1)      { min, max, step }
+declare ui_menu $menu
+declare ui_button $button
+declare ui_switch $switch
+declare ui_slider $slider (0, 100)
+declare ui_label $label (width, height)
+```
+
+## UI Commands
+```
+add_menu_item($menu, "Text", value)
+set_text($control, "Label")
+move_control($control, col, row)
+move_control_px($control, x, y)
+set_knob_unit($knob, $KNOB_UNIT_DB)
+make_persistent($control)
+read_persistent_var($control)
+hide_part($control, $HIDE_PART_BG)
+set_control_par(get_ui_id($control), $CONTROL_PAR_xxx, value)
+```
+
+## Engine Parameters
+```
+set_engine_par($ENGINE_PAR_VOLUME, value, group, slot, slot_parameter)
+set_engine_par($ENGINE_PAR_PAN, value, -1, -1, -1)
+set_engine_par($ENGINE_PAR_TUNING, value, -1, -1, -1)
+set_engine_par($ENGINE_PAR_SEND_0, value, -1, -1, -1)
+set_engine_par($ENGINE_PAR_EFFECT_TYPE, type, -1, slot, -1)
+```
+
+## Event Commands
+```
+$EVENT_NOTE      { MIDI note number }
+$EVENT_VELOCITY  { velocity 1-127 }
+$EVENT_ID        { unique note ID }
+
+ignore_event($EVENT_ID)
+play_note(note, velocity, offset, duration)
+change_velo($EVENT_ID, new_velo)
+change_tune($EVENT_ID, cents, relative)    { cents in millicents (100000 = 1 semitone) }
+change_vol($EVENT_ID, db, relative)        { db in millidecibels }
+change_pan($EVENT_ID, pan, relative)      { -1000 to 1000 }
+```
+
+## Control Flow
+```
+if (condition)
+  { code }
+else
+  { code }
+end if
+
+select ($variable)
+  case 0
+    { code }
+  case 1 to 10
+    { code }
+end select
+```
+
+## Built-in Variables
+```
+$ALL_EVENTS     { all active notes }
+$ALL_GROUPS     { all groups }
+$NUM_GROUPS     { number of groups }
+$CC_NUM         { current CC number }
+%CC[0...127]    { CC values }
+$NOTE_HELD       { 1 if key held }
+$ENGINE_UPTIME  { milliseconds since load }
+```
+
+## Key Constants
+```
+$KNOB_UNIT_DB       { dB unit }
+$KNOB_UNIT_HZ      { Hertz }
+$KNOB_UNIT_PERCENT { Percent }
+$HIDE_PART_BG      { Hide background }
+$HIDE_PART_VALUE   { Hide value }
+$HIDE_WHOLE_CONTROL
+$ENGINE_PAR_VOLUME
+$ENGINE_PAR_PAN
+$ENGINE_PAR_TUNING
+$ENGINE_PAR_SEND_0 to $ENGINE_PAR_SEND_7
+```
+
+## Zone Commands
+```
+set_sample(%this, "path.wav", zone_index, group_index)
+get_num_zones()
+find_zone("name")
+get_zone_id(group_index, zone_index)
+```
+
+## Useful Patterns
+```
+{ Wait }
+wait(microseconds)    { 1000000 = 1 second }
+
+{ Loops }
+while (condition)
+  { code }
+end while
+
+{ Persistent UI }
+make_persistent($my_knob)
+read_persistent_var($my_knob)
+
+{ Key range check }
+if (in_range($EVENT_NOTE, 60, 72))
+  { note is in range }
+end if
