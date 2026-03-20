@@ -232,11 +232,13 @@ function trimSilence(buffer, thresholdDb, ctx, fadeoutMs, mode) {
     }
 
     // Use peak-relative threshold: -12dB from peak for cleaner release detection
-    const peakThreshold = peakVal * 0.251; // ~-12dB
+    // Peak-relative adapts to the sample's own dynamics rather than a fixed dB floor
+    const peakThreshold = peakVal * 0.251; // ~-12dB from peak
     const absThreshold = Math.pow(10, thresholdDb / 20);
 
-    // Use whichever threshold is higher (less sensitive) - prevents over-trimming
-    const threshold = Math.max(peakThreshold, absThreshold);
+    // Use whichever threshold is LOWER (less aggressive) so we don't over-trim quiet releases
+    // But also enforce a minimum floor so we don't chase the noise floor
+    const threshold = Math.max(Math.min(peakThreshold, absThreshold), 0.001);
 
     // Find start - first sample above threshold
     let start = 0;
