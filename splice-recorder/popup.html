@@ -117,6 +117,13 @@
       box-shadow: 0 2px 8px rgba(107, 70, 193, 0.4);
     }
     
+    /* Category visibility based on mode */
+    #categories { display: grid; }
+    #loopCategories { display: none; }
+    
+    #categories.loop-active { display: none; }
+    #loopCategories.loop-active { display: grid; }
+    
     /* Filename input */
     .filename-input {
       width: 100%;
@@ -289,8 +296,8 @@
       <button class="cat-btn" data-cat="other">OTHER</button>
     </div>
     
-    <!-- Loop Categories (hidden by default) -->
-    <div class="categories" id="loopCategories" style="display: none;">
+    <!-- Loop Categories (hidden by default, shown via CSS when loop mode active) -->
+    <div class="categories" id="loopCategories">
       <button class="cat-btn active" data-cat="fulldrums">FULL DRUMS</button>
       <button class="cat-btn" data-cat="drumtops">DRUM TOPS</button>
       <button class="cat-btn" data-cat="kicks">KICKS</button>
