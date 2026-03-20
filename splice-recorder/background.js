@@ -192,6 +192,8 @@ async function handleStopRecording(settings) {
   
   console.log('[Background] Stopping...');
   
+  // IMPORTANT: sendMessage returns a promise - await it before clearing isRecording
+  // This prevents a race where the user can click start again while stop is still in flight
   const response = await chrome.runtime.sendMessage({
     type: 'stopCapture',
     settings: settings

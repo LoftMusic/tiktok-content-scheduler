@@ -19,6 +19,7 @@
   let lastFile = null;
   let detectedSampleName = null;
   let lastPlayedElement = null;
+  let recordingFilename = null; // Locked at start - never changes during recording
   
   // One Shot categories
   const oneShotCategories = ['kick', 'snare', 'hihat', 'tom', 'clap', 'perc', 'fx', 'vocal', 'other'];
@@ -556,9 +557,9 @@
     }
     
     if (!isRecording) {
-      // Get filename: from input OR detected name OR fallback
-      const inputName = document.querySelector('#ar-filename')?.value?.trim();
-      const filename = inputName || detectedSampleName || null;
+      // Lock filename at start - prevents mid-recording overwrites from play button clicks
+      recordingFilename = document.querySelector('#ar-filename')?.value?.trim() || detectedSampleName || null;
+      const filename = recordingFilename;
       
       console.log('[Audio Recorder] Starting recording, filename:', filename, 'detected:', detectedSampleName);
       
@@ -589,9 +590,9 @@
       // Stop recording
       stopTimer();
       
-      // Get filename at stop time too (in case user typed after starting)
-      const inputName = document.querySelector('#ar-filename')?.value?.trim();
-      const filename = inputName || detectedSampleName || null;
+      // Get filename at stop - MUST use the locked filename from start
+      // Do NOT re-check input or detectedSampleName here (they may have changed)
+      const filename = recordingFilename || document.querySelector('#ar-filename')?.value?.trim() || null;
       
       const settings = {
         mode: currentMode,
@@ -611,6 +612,7 @@
       chrome.runtime.sendMessage({ type: 'stopRecording', settings }, (response) => {
         isRecording = false;
         updateUI();
+        recordingFilename = null; // Clear locked filename after save
         
         if (response && response.success) {
           setStatus(`✅ Saved: ${response.filename} (${response.duration.toFixed(2)}s)`, 'success');
@@ -623,6 +625,7 @@
           if (lastName) lastName.textContent = response.filename;
         } else {
           setStatus('❌ ' + (response?.error || 'Recording failed'), 'error');
+          recordingFilename = null;
         }
         
         const timer = document.querySelector('#ar-timer');

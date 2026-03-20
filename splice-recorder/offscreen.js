@@ -3,6 +3,7 @@
 let mediaRecorder = null;
 let audioChunks = [];
 let audioStream = null;
+let currentSessionId = 0; // Incremented each start, used to cancel stale timeouts
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('[Offscreen] Message:', message.type);
@@ -61,8 +62,17 @@ async function startCapture(streamId, settings) {
     mediaRecorder.start(100);
     console.log('[Offscreen] Recording started');
     
+    // Increment session ID so any previous timeouts will bail out
+    currentSessionId++;
+    const thisSession = currentSessionId;
+    
     const maxMs = (settings?.maxDuration || 30) * 1000;
     setTimeout(async () => {
+      // Only auto-stop if we're still in the same session
+      if (thisSession !== currentSessionId) {
+        console.log('[Offscreen] Auto-stop cancelled - session mismatch');
+        return;
+      }
       if (mediaRecorder?.state === 'recording') {
         console.log('[Offscreen] Auto-stop');
         await stopCapture(settings);
@@ -84,8 +94,30 @@ async function stopCapture(settings) {
       return;
     }
     
+    // Clear auto-stop timeout by incrementing the recording session ID
+    // Any pending timeout will check this and bail out
+    currentSessionId++;
+    const mySessionId = currentSessionId;
+    
+    // Stop the MediaRecorder - this will trigger onstop
+    // If already stopped, onstop may fire immediately or not at all
+    const stateBeforeStop = mediaRecorder.state;
+    mediaRecorder.stop();
+    
+    // Set a safety fallback - if onstop doesn't fire within 2s, resolve anyway
+    const safetyTimer = setTimeout(() => {
+      console.log('[Offscreen] Safety timer fired, session:', mySessionId);
+      if (mediaRecorder) {
+        audioStream?.getTracks().forEach(t => t.stop());
+        audioStream = null;
+      }
+      resolve({ success: false, error: 'Timeout waiting for recorder to stop' });
+    }, 2000);
+    
     mediaRecorder.onstop = async () => {
-      console.log('[Offscreen] Recorder stopped');
+      clearTimeout(safetyTimer);
+      // Only process if this is still our session
+      console.log('[Offscreen] Recorder stopped, session:', mySessionId);
       
       if (audioStream) {
         audioStream.getTracks().forEach(t => t.stop());
@@ -108,7 +140,15 @@ async function stopCapture(settings) {
       audioChunks = [];
     };
     
-    mediaRecorder.stop();
+    // If state was already 'inactive', onstop may never fire - trigger manually
+    if (stateBeforeStop !== 'recording') {
+      clearTimeout(safetyTimer);
+      if (mediaRecorder) {
+        audioStream?.getTracks().forEach(t => t.stop());
+        audioStream = null;
+      }
+      resolve({ success: false, error: 'Recorder was not in recording state' });
+    }
   });
 }
 
