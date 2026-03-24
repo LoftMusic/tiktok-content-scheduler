@@ -3,7 +3,6 @@
 let mediaRecorder = null;
 let audioChunks = [];
 let audioStream = null;
-let currentSessionId = 0; // Incremented each start, used to cancel stale timeouts
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('[Offscreen] Message:', message.type);
@@ -62,17 +61,8 @@ async function startCapture(streamId, settings) {
     mediaRecorder.start(100);
     console.log('[Offscreen] Recording started');
     
-    // Increment session ID so any previous timeouts will bail out
-    currentSessionId++;
-    const thisSession = currentSessionId;
-    
     const maxMs = (settings?.maxDuration || 30) * 1000;
     setTimeout(async () => {
-      // Only auto-stop if we're still in the same session
-      if (thisSession !== currentSessionId) {
-        console.log('[Offscreen] Auto-stop cancelled - session mismatch');
-        return;
-      }
       if (mediaRecorder?.state === 'recording') {
         console.log('[Offscreen] Auto-stop');
         await stopCapture(settings);
@@ -94,30 +84,8 @@ async function stopCapture(settings) {
       return;
     }
     
-    // Clear auto-stop timeout by incrementing the recording session ID
-    // Any pending timeout will check this and bail out
-    currentSessionId++;
-    const mySessionId = currentSessionId;
-    
-    // Stop the MediaRecorder - this will trigger onstop
-    // If already stopped, onstop may fire immediately or not at all
-    const stateBeforeStop = mediaRecorder.state;
-    mediaRecorder.stop();
-    
-    // Set a safety fallback - if onstop doesn't fire within 2s, resolve anyway
-    const safetyTimer = setTimeout(() => {
-      console.log('[Offscreen] Safety timer fired, session:', mySessionId);
-      if (mediaRecorder) {
-        audioStream?.getTracks().forEach(t => t.stop());
-        audioStream = null;
-      }
-      resolve({ success: false, error: 'Timeout waiting for recorder to stop' });
-    }, 2000);
-    
     mediaRecorder.onstop = async () => {
-      clearTimeout(safetyTimer);
-      // Only process if this is still our session
-      console.log('[Offscreen] Recorder stopped, session:', mySessionId);
+      console.log('[Offscreen] Recorder stopped');
       
       if (audioStream) {
         audioStream.getTracks().forEach(t => t.stop());
@@ -140,15 +108,7 @@ async function stopCapture(settings) {
       audioChunks = [];
     };
     
-    // If state was already 'inactive', onstop may never fire - trigger manually
-    if (stateBeforeStop !== 'recording') {
-      clearTimeout(safetyTimer);
-      if (mediaRecorder) {
-        audioStream?.getTracks().forEach(t => t.stop());
-        audioStream = null;
-      }
-      resolve({ success: false, error: 'Recorder was not in recording state' });
-    }
+    mediaRecorder.stop();
   });
 }
 
@@ -185,7 +145,7 @@ async function processAudio(blob, settings) {
         duration = audioBuffer.duration;
         
         // Trim silence
-        const trimmed = trimSilence(audioBuffer, threshold, ctx, fadeoutMs, mode);
+        const trimmed = trimSilence(audioBuffer, threshold, ctx, fadeoutMs);
         
         if (trimmed) {
           console.log('[Offscreen] Trimmed:', trimmed.duration.toFixed(2), 's');
@@ -247,71 +207,45 @@ async function processAudio(blob, settings) {
   }
 }
 
-function trimSilence(buffer, thresholdDb, ctx, fadeoutMs, mode) {
+function trimSilence(buffer, thresholdDb, ctx, fadeoutMs) {
   try {
-    mode = mode || 'oneshot';
+    const threshold = Math.pow(10, thresholdDb / 20);
     const ch = buffer.numberOfChannels;
     const len = buffer.length;
     const sr = buffer.sampleRate;
-
+    
     // Find amplitude envelope
     const amp = new Float32Array(len);
-    let peakVal = 0;
     for (let c = 0; c < ch; c++) {
       const data = buffer.getChannelData(c);
       for (let i = 0; i < len; i++) {
-        const absVal = Math.abs(data[i]);
-        amp[i] = Math.max(amp[i], absVal);
-        if (absVal > peakVal) peakVal = absVal;
+        amp[i] = Math.max(amp[i], Math.abs(data[i]));
       }
     }
-
-    if (peakVal === 0) {
-      console.log('[Offscreen] No audio found');
-      return null;
-    }
-
-    // Use peak-relative threshold: -12dB from peak for cleaner release detection
-    // Peak-relative adapts to the sample's own dynamics rather than a fixed dB floor
-    const peakThreshold = peakVal * 0.251; // ~-12dB from peak
-    const absThreshold = Math.pow(10, thresholdDb / 20);
-
-    // Use whichever threshold is LOWER (less aggressive) so we don't over-trim quiet releases
-    // But also enforce a minimum floor so we don't chase the noise floor
-    const threshold = Math.max(Math.min(peakThreshold, absThreshold), 0.001);
-
-    // Find start - first sample above threshold
-    let start = 0;
+    
+    // Find start and end
+    let start = 0, end = len - 1;
     for (let i = 0; i < len; i++) {
       if (amp[i] > threshold) { start = i; break; }
     }
-
-    // Find end - last sample above threshold
-    let end = len - 1;
     for (let i = len - 1; i >= 0; i--) {
       if (amp[i] > threshold) { end = i; break; }
     }
-
-    if (mode === 'oneshot') {
-      // Oneshot: shift end point 50ms to the right to preserve full release tail
-      // This ensures we don't cut into the sound's natural decay
-      const endShiftMs = 50;
-      const endShiftSamples = Math.floor(sr * endShiftMs / 1000);
-      end = Math.min(len - 1, end + endShiftSamples);
-    } else {
-      // Loop mode: use standard padding (50ms at end)
-      const padEnd = Math.floor(sr * 0.05);
-      end = Math.min(len - 1, end + padEnd);
-    }
-
+    
+    // Padding - add 50ms extra from detected FINISH point (end)
+    const padStart = Math.floor(sr * 0.02); // 20ms at start
+    const padEnd = Math.floor(sr * 0.05); // 50ms at end (exactly 50ms from detected finish)
+    start = Math.max(0, start - padStart);
+    end = Math.min(len - 1, end + padEnd);
+    
     if (start >= end) {
       console.log('[Offscreen] No audio above threshold');
       return null;
     }
-
+    
     const newLen = end - start + 1;
     const newBuf = ctx.createBuffer(ch, newLen, sr);
-
+    
     for (let c = 0; c < ch; c++) {
       const src = buffer.getChannelData(c);
       const dst = newBuf.getChannelData(c);
@@ -319,12 +253,12 @@ function trimSilence(buffer, thresholdDb, ctx, fadeoutMs, mode) {
         dst[i] = src[start + i];
       }
     }
-
+    
     // Apply fadeout
     if (fadeoutMs > 0) {
       applyFadeout(newBuf, fadeoutMs);
     }
-
+    
     return newBuf;
   } catch (e) {
     console.error('[Offscreen] trimSilence error:', e);

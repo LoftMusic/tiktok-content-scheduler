@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NanoBanana 2 — TikTok Prompt Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0f;
+      --surface: #18181c;
+      --surface2: #222228;
+      --border: #2e2e38;
+      --gold: #c9a84c;
+      --gold-dim: #8a6f2e;
+      --pink: #e0507a;
+      --text: #f0ece4;
+      --text-dim: #8a8690;
+      --accent: #e0507a;
+      --enhanced: #c050e0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.35;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+      position: relative;
+    }
+
+    .brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--gold) 0%, #f0d080 40%, var(--pink) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .tagline {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .model-badge {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.3rem 0.9rem;
+      border: 1px solid var(--gold-dim);
+      border-radius: 999px;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* ── Layout ── */
+    .app-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 760px) {
+      .app-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 1rem 1.25rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .card-header.collapsible {
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+
+    .card-header.collapsible:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .card-header .arrow {
+      margin-left: auto;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      transition: transform 0.25s ease;
+      display: inline-block;
+    }
+
+    .card-header.collapsed .arrow {
+      transform: rotate(-90deg);
+    }
+
+    .card-body {
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.25s ease;
+      max-height: 2000px;
+      opacity: 1;
+    }
+
+    .card-body.collapsed {
+      max-height: 0;
+      opacity: 0;
+    }
+
+    .card-header-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--pink);
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .card-body { padding: 1.25rem; }
+
+    /* ── Toggle Switch ── */
+    .mode-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .mode-toggle-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px;
+      cursor: pointer;
+      flex: 1;
+      max-width: 320px;
+    }
+
+    .toggle-switch::before {
+      content: '';
+      position: absolute;
+      width: calc(50% - 3px);
+      height: calc(100% - 6px);
+      background: var(--gold);
+      border-radius: 999px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform: translateX(3px);
+    }
+
+    .toggle-switch.enhanced::before {
+      background: var(--enhanced);
+      transform: translateX(calc(100% + 0px));
+    }
+
+    .toggle-opt {
+      flex: 1;
+      text-align: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.5rem;
+      border-radius: 999px;
+      transition: color 0.3s;
+      position: relative;
+      z-index: 1;
+      user-select: none;
+    }
+
+    .toggle-opt:first-child { color: var(--bg); }
+    .toggle-opt:last-child { color: var(--text-dim); }
+    .toggle-switch.enhanced .toggle-opt:first-child { color: var(--text-dim); }
+    .toggle-switch.enhanced .toggle-opt:last-child { color: var(--bg); }
+
+    /* ── Form Controls ── */
+    .field {
+      margin-bottom: 1.1rem;
+    }
+
+    .field:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      padding: 0.5rem 0.75rem;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a8690' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      padding-right: 2rem;
+      cursor: pointer;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+      line-height: 1.5;
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--gold);
+      cursor: pointer;
+      height: 4px;
+    }
+
+    input[type="range"].sexy-slider {
+      accent-color: var(--pink);
+    }
+
+    .range-val {
+      font-size: 0.75rem;
+      min-width: 2.5rem;
+      text-align: right;
+    }
+
+    .range-val-gold { color: var(--gold); }
+    .range-val-pink { color: var(--pink); }
+    .range-val-enhanced { color: var(--enhanced); }
+
+    /* ── Checkboxes ── */
+    .check-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      padding: 0.35rem 0.5rem;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .check-item:hover { background: var(--surface2); color: var(--text); }
+
+    .check-item input[type="checkbox"] {
+      width: 14px; height: 14px;
+      accent-color: var(--gold);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .check-item.checked {
+      border-color: var(--gold-dim);
+      background: rgba(201, 168, 76, 0.06);
+      color: var(--text);
+    }
+
+    /* ── Section Separator ── */
+    .section-sep {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--pink);
+      padding: 0.6rem 0 0.4rem;
+      border-top: 1px solid var(--border);
+      margin-top: 0.25rem;
+    }
+
+    .section-sep.enhanced {
+      color: var(--enhanced);
+    }
+
+    /* ── Prompt Output ── */
+    #prompt-output {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      font-size: 0.72rem;
+      line-height: 1.7;
+      color: #d4c9a8;
+      white-space: pre-wrap;
+      word-break: break-all;
+      min-height: 200px;
+      max-height: 480px;
+      overflow-y: auto;
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.18s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), #d4a843);
+      color: #0d0d0f;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(201, 168, 76, 0.3);
+    }
+
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--gold-dim);
+      color: var(--gold);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      flex: 0 0 auto;
+      padding: 0.65rem 0.8rem;
+    }
+
+    .btn-ghost:hover { color: var(--text); border-color: var(--text-dim); }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--gold);
+      color: #0d0d0f;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.65rem 1.5rem;
+      border-radius: 999px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 1000;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.25rem 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.62rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+    }
+
+    /* Enhanced mode accent */
+    body.enhanced-mode .card {
+      border-color: color-mix(in srgb, var(--enhanced) 30%, var(--border));
+    }
+
+    .enhanced-note {
+      font-size: 0.6rem;
+      color: var(--enhanced);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+      opacity: 0.8;
+    }
+
+    /* Slider track fill visual */
+    .slider-track {
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <span class="brand">NanoBanana 2</span>
+    <p class="tagline">TikTok Model Prompt Generator</p>
+    <span class="model-badge">Romanian · Beauty · Lifestyle</span>
+  </header>
+
+  <div class="app-grid">
+
+    <!-- ── LEFT: Controls ── -->
+    <div class="left-col">
+
+      <!-- Mode Toggle -->
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div class="card-body">
+          <div class="mode-toggle-wrap">
+            <span class="mode-toggle-label">Beauty Mode</span>
+            <div class="toggle-switch" id="mode-toggle" onclick="toggleMode()">
+              <span class="toggle-opt">Natural</span>
+              <span class="toggle-opt">Enhanced</span>
+            </div>
+          </div>
+
+          <div class="field" style="margin-bottom:0;">
+            <label>Sexy Clothing Level — <span id="sexy-label" style="color:var(--pink);">Moderate</span></label>
+            <div class="range-row">
+              <span style="font-size:0.6rem;color:var(--text-dim);">Modest</span>
+              <input type="range" id="sexy-slider" class="sexy-slider" min="0" max="100" value="40" oninput="updateSexyLabel()">
+              <span style="font-size:0.6rem;color:var(--text-dim);">Risqué</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header collapsible" onclick="toggleSection(this)">
+          <span class="card-header-dot"></span>
+          <span class="card-title">Subject</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="card-body collapsed" id="subject-body">
+
+          <div class="field">
+            <label>Ethnicity</label>
+            <select id="ethnicity">
+              <option value="Romanian">Romanian</option>
+              <option value="Moldovan">Moldovan</option>
+              <option value="Eastern European">Eastern European</option>
+              <option value="Mixed European">Mixed European</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Age</label>
+            <div class="range-row">
+              <input type="range" id="age-range" min="18" max="40" value="23" oninput="ageVal.textContent = this.value">
+              <span class="range-val range-val-gold" id="age-val">23</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Skin Tone</label>
+            <select id="skinTone">
+              <option value="light tan, warm undertone">Light Tan</option>
+              <option value="fair, porcelain, cool undertone">Fair</option>
+              <option value="medium, olive skin, golden undertone">Medium / Olive</option>
+              <option value="light olive, neutral warm undertone">Light Olive</option>
+              <option value="warm beige, peachy undertone">Warm Beige</option>
+            </select>
+          </div>
+
+          <div class="section-sep" id="face-sec">Face & Features</div>
+
+          <!-- Natural Face Options -->
+          <div id="natural-face">
+            <div class="field">
+              <label>Face Shape</label>
+              <select id="faceShape">
+                <option value="slightly rounded face, soft cheekbones, defined yet gentle jawline">Slightly Rounded / Soft</option>
+                <option value="oval face, high cheekbones, soft jawline">Oval / High Cheekbones</option>
+                <option value="heart-shaped face, delicate chin, soft features">Heart-Shaped</option>
+                <option value="soft square face, rounded jaw, approachable features">Soft Square</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Eye Color</label>
+              <select id="eyeColor">
+                <option value="hazel eyes, warm flecked iris">Hazel</option>
+                <option value="soft green eyes, warm undertone">Soft Green</option>
+                <option value="warm brown eyes, golden highlights">Warm Brown</option>
+                <option value="deep brown eyes, rich chocolate">Deep Brown</option>
+                <option value="blue-gray eyes, cool undertone">Blue-Gray</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Expression</label>
+              <select id="expression">
+                <option value="confident, relaxed smile, slight smirk">Confident / Relaxed</option>
+                <option value="soft smile, gentle and approachable">Soft Smile</option>
+                <option value="captivating gaze, intense eye contact">Captivating / Intense</option>
+                <option value="playful expression, light smile">Playful</option>
+                <option value="calm, cool, effortlessly stunning">Cool / Effortless</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Lips</label>
+              <select id="lips">
+                <option value="natural lips, soft defined shape, subtle sheen">Natural</option>
+                <option value="full lips, soft natural shape with slight plumpness">Full Natural</option>
+                <option value="defined lips, classic shape, matte finish">Defined Classic</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Nose</label>
+              <select id="nose">
+                <option value="natural nose, soft bridge, harmonious proportions">Natural Soft</option>
+                <option value="straight nose, defined bridge, elegant profile">Straight Elegant</option>
+                <option value="small nose, delicate, proportional to face">Small Delicate</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Skin Texture</label>
+              <select id="skinTexture">
+                <option value="smooth skin with light natural glow, healthy radiance, poreless">Smooth / Light Glow</option>
+                <option value="glass skin, luminous dewy finish, translucent glow">Glass Skin</option>
+                <option value="fresh skin, natural matte with soft luminosity">Fresh / Natural Matte</option>
+                <option value="airbrushed skin, soft focus perfection, smooth complexion">Airbrushed</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Natural Enhancements (optional)</label>
+              <select id="surgery">
+                <option value="no visible enhancements, completely natural features">None — Fully Natural</option>
+                <option value="subtle lip balm effect, naturally hydrated, slight gloss">Hydrated Lips</option>
+                <option value="light brow gel, naturally defined arches">Groomed Brows</option>
+                <option value="subtle under-eye brightness, natural radiance">Bright Under-Eyes</option>
+                <option value="slight cheek definition from contouring, makeup-enhanced">Light Contour</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Enhanced Face Options (hidden by default) -->
+          <div id="enhanced-face" style="display:none;">
+            <p class="enhanced-note">Enhanced mode — dramatic, filter-heavy, plastic surgery vibes</p>
+
+            <div class="field">
+              <label>Plastic Surgery Intensity — <span id="surgery-label" style="color:var(--enhanced);">Moderate</span></label>
+              <div class="range-row">
+                <span style="font-size:0.6rem;color:var(--text-dim);">Subtle</span>
+                <input type="range" id="surgery-intensity" class="sexy-slider" min="0" max="100" value="50" oninput="updateSurgeryLabel()" style="accent-color:var(--enhanced);">
+                <span style="font-size:0.6rem;color:var(--text-dim);">Extreme</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Face Shape</label>
+              <select id="faceShapeEnhanced">
+                <option value="slim oval face, defined cheekbones, soft contoured jaw, polished proportions">Slim Oval / Contoured</option>
+                <option value="soft V-shaped face, refined jawline, gentle facial narrowing, balanced proportions">Soft V-Shape / Refined</option>
+                <option value="chiseled face, sculpted cheekbones, sharp jaw, model-like bone structure">Chiseled / Sculpted</option>
+                <option value="heart-shaped face, delicate chin, high cheekbones, elegant proportions">Heart-Shaped / Elegant</option>
+                <option value="structured face, strong cheekbones, clean jawline, architectural features">Structured / Architectural</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Eye Style</label>
+              <select id="foxEye">
+                <option value="defined almond eyes, clean orbital shape, naturally uplifted outer corners, minimal makeup">Defined Almond / Natural</option>
+                <option value="cat eye style, slight upward tilt, defined with liner, polished look">Cat Eye / Polished</option>
+                <option value="large round eyes, full lash line, bright and open, fresh makeup look">Large Round / Doll</option>
+                <option value="hooded eyes, soft defined crease, natural glam, flattering shape">Hooded / Soft Glam</option>
+                <option value="bright wide eyes, clean eye shape, fresh faced, natural definition">Wide Awake / Fresh</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Eye Color</label>
+              <select id="eyeColorEnhanced">
+                <option value="warm hazel eyes, soft flecked iris, natural depth">Warm Hazel</option>
+                <option value="deep brown eyes, rich warm iris, classic and expressive">Deep Brown</option>
+                <option value="soft green eyes, subtle grey-green undertone, natural iris detail">Soft Green</option>
+                <option value="bright blue eyes, clear iris, light-catching, natural clarity">Bright Blue</option>
+                <option value="warm amber eyes, golden-brown tone, honeyed depth">Amber / Golden Brown</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Lip Filler</label>
+              <select id="lipsEnhanced">
+                <option value="subtle lip filler, natural hydration, soft plumpness, barely enhanced">Subtle / Barely Enhanced</option>
+                <option value="light lip filler, defined shape, natural volume, soft Cupid bow">Light / Natural Volume</option>
+                <option value="moderate lip filler, full but natural-looking, defined shape, balanced proportions">Moderate / Balanced</option>
+                <option value="noticeable lip filler, clear volume increase, well-distributed, still natural">Noticeable / Full</option>
+                <option value="full lip filler, pronounced volume, clear enhancement, plump pout">Full / Pronounced</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Nose — Filler / Refinement</label>
+              <select id="noseEnhanced">
+                <option value="subtle nose filler, slight bridge refinement, tip lift, natural proportions">Subtle Bridge Filler</option>
+                <option value="liquid rhinoplasty, straight bridge, refined tip, smooth profile, believable">Liquid Rhino / Smooth</option>
+                <option value="minor nose refinement, slight profile adjustment, natural-looking, refined tip">Minor Refinement</option>
+                <option value="nose filler with tip definition, balanced enhancement, natural result">Filler + Tip Definition</option>
+                <option value="defined nose bridge, refined nostrils, clean profile, natural enhancement">Defined Bridge</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Cheek / Face Contour</label>
+              <select id="cheeksEnhanced">
+                <option value="subtle cheek filler, gentle volume, youthful lift, natural-looking">Subtle Cheek Filler</option>
+                <option value="high cheekbone filler, sculpted look, defined cheekbones, balanced">High Cheekbones / Sculpted</option>
+                <option value="jawline filler, defined jaw, softened jaw angle, V-line effect">Jawline Filler / V-Line</option>
+                <option value="chin filler, slight projection, better facial harmony, natural proportions">Chin Filler / Harmony</option>
+                <option value="light facial contouring with filler, overall refinement, balanced enhancement">Light Contouring / Overall</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Skin Finish</label>
+              <select id="skinEnhanced">
+                <option value="clear smooth skin, even tone, natural radiance, healthy complexion">Clear / Natural Radiance</option>
+                <option value="polished skin, smooth texture, soft luminosity, refined finish">Polished / Soft Glow</option>
+                <option value="medi-spa skin, clean complexion, smooth texture, healthy glow">Med Spa / Clean</option>
+                <option value="glow skin, luminous finish, healthy sheen, fresh complexion">Glow / Luminous</option>
+                <option value="smooth skin, even complexion, minimal pores, soft-focus finish">Smooth / Soft-Focus</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Brow Style</label>
+              <select id="browsEnhanced">
+                <option value="none">None — Use Natural Brows</option>
+                <option value="microbladed brows, natural hair strokes, defined shape, feathery look">Microbladed / Natural Strokes</option>
+                <option value="laminated brows, brushed up, full and fluffy, defined shape">Laminated / Fluffy</option>
+                <option value="Botox brow lift, slightly elevated tail, open-eye look, natural arch">Botox Brow Lift</option>
+                <option value="styled brows, shaped and tinted, groomed to perfection">Styled / Groomed</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Overall Aesthetic</label>
+              <select id="comboEnhanced">
+                <option value="none">None</option>
+                <option value="clean girl aesthetic, minimal enhancements, polished and natural">Clean Girl / Minimal</option>
+                <option value="polished aesthetic, subtle work throughout, refined and cohesive">Polished / Refined</option>
+                <option value="soft glam, natural enhancements, makeup-enhanced, fresh look">Soft Glam / Natural</option>
+                <option value="model-inspired, contoured and sculpted, editorial but wearable">Model-Inspired / Sculpted</option>
+                <option value="K-beauty inspired, clear skin, gentle enhancements, dewy and fresh">K-Beauty Inspired</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="section-sep">Body Proportions</div>
+
+          <div class="field">
+            <label>Body Type</label>
+            <select id="body">
+              <option value="voluptuous hourglass figure, full bust, defined waist, full hips, curvy silhouette">Voluptuous Hourglass</option>
+              <option value="curvy with full bust and hips, thick thighs, soft midsection, realistic body type">Curvy / Full Figure</option>
+              <option value="busty body type, large chest, proportionate hips, full figure, hourglass shape">Busty / Full Bust</option>
+              <option value="slim thick body type, small waist, full hips and thighs, perky backside, trendy shape">Slim Thick / BBW Type</option>
+              <option value="athletic curvy, toned midsection, full hips, defined butt, fit physique with curves">Athletic Curvy / Fit Thick</option>
+              <option value="full figured with a large backside, curvy hips, plump thighs, soft stomach, plus-size body">Full Figured / Big Booty</option>
+              <option value="balanced curvy body, medium bust, full hips, defined waist, natural proportioned curves">Balanced Curvy / Natural</option>
+              <option value="petite hourglass, small frame, tight waist, medium bust, full hips, delicate looking">Petite Hourglass</option>
+            </select>
+          </div>
+
+          <div class="section-sep">Hair</div>
+
+          <div class="field">
+            <label>Hair Color & Style</label>
+            <select id="hair">
+              <option value="shoulder-length dark blonde hair, soft natural waves, effortless texture">Dark Blonde / Soft Waves</option>
+              <option value="shoulder-length auburn hair, loose soft curls, voluminous">Auburn / Loose Curls</option>
+              <option value="shoulder-length chestnut brown hair, beach waves, natural sheen">Chestnut / Beach Waves</option>
+              <option value="long bob brown hair, soft straight style, healthy shine">Long Bob / Straight</option>
+              <option value="shoulder-length platinum blonde hair, subtle ash tone, soft texture">Platinum Blonde</option>
+              <option value="mid-length dark brown hair, gentle waves, effortless look">Dark Brown / Gentle Waves</option>
+              <option value="long honey blonde hair, soft cascading waves, golden tones">Honey Blonde / Cascading</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Eyebrows</label>
+            <select id="eyebrows">
+              <option value="natural shape eyebrows, soft arch, groomed yet effortless">Natural / Soft Arch</option>
+              <option value="fluffy eyebrows, bold natural shape, slightly unkempt">Fluffy / Bold</option>
+              <option value="lamed arches, refined shape, clean-defined">Laminated / Refined</option>
+              <option value="soft straight eyebrows, Korean-style natural fluff">Korean Style</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── RIGHT: Style + Output ── -->
+    <div class="right-col">
+
+      <div class="card">
+        <div class="card-header collapsible" onclick="toggleSection(this)">
+          <span class="card-header-dot" style="background: var(--gold)"></span>
+          <span class="card-title">Style & Environment</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="card-body collapsed" id="style-body">
+
+          <div class="field">
+            <label>Outfit Category</label>
+            <select id="outfit" onchange="onOutfitChange()">
+              <!-- 0-20: Conservative — casual at home, covered up -->
+              <option value="oversized black Balenciaga Triple S hoodie, dropped shoulders, boyfriend fit, casual cool, home TikTok aesthetic" data-tier="0">Oversized Balenciaga Hoodie</option>
+              <option value="white Nike Dri-FIT tank top, fitted, black cycling shorts, clean athletic home aesthetic" data-tier="0">Nike Tank + Cycling Shorts</option>
+              <option value="grey vintage Stussy essential sweatshirt, relaxed fit, vintage wash, casual streetwear at home" data-tier="0">Vintage Stussy Sweatshirt</option>
+              <option value="black Lululemon Align tank, fitted, high neck, yoga studio at home, minimal and sleek" data-tier="0">Lululemon Align Tank</option>
+              <option value="oversized cream Kith crewneck, relaxed fit, styled with layered gold chains, cozy chic at home" data-tier="0">Oversized Kith Crewneck</option>
+              <option value="white ribbed Reformation midi tank top, simple and clean, classic influencer casual at home" data-tier="0">Reformation Ribbed Tank</option>
+              <option value="black Wolford seamless bodysuit, turtle neck, minimal and sleek, model-off-duty bedroom aesthetic" data-tier="0">Wolford Bodysuit / Turtle</option>
+              <option value="grey heather Nike AF1 hoodie, tied at waist, white sneakers, timeless casual home outfit" data-tier="0">Nike AF1 Hoodie + Sneakers</option>
+
+              <!-- 21-40: Moderate — fitted, designer, showing a bit more -->
+              <option value="black SKIMS ultra-smooth scoop neck bodysuit, figure-hugging, model inner-beauty aesthetic" data-tier="1" selected>SKIMS Bodysuit / Scoop</option>
+              <option value="white Calvin Klein logo sports bra, defined shape, black low-rise baggy denim, clean casual street" data-tier="1">Calvin Klein Bra + Baggy Denim</option>
+              <option value="black Versace baroque logo crop top, bold gold print, low-rise leather-look leggings, brand-driven fit" data-tier="1">Versace Crop + Leather Leggings</option>
+              <option value="cream silk satin cami top, delicate straps, black low-rise midi skirt, quiet luxury bedroom" data-tier="1">Satin Cami + Midi Skirt</option>
+              <option value="black Nensi Dojaka inspired cut-out bodysuit, strategic cut-outs at waist and chest, statement look" data-tier="1">Cut-Out Body / Strategic</option>
+              <option value="white cropped Nike swoosh tee, midriff visible, black low-rise biker shorts, athletic-slash-sexy" data-tier="1">Cropped Nike Tee + Biker Shorts</option>
+              <option value="black halter neck bodysuit, deep V-neck, structured, club-inspired but wearable, statement necklace" data-tier="1">Haltern Bodysuit / Deep V</option>
+              <option value="grey heather Alo Yoga cropped hoodie, tied at front, showing midriff, lemon sour aesthetic" data-tier="1">Alo Yoga Cropped Hoodie</option>
+              <option value="black Gucci logo bandana, tied around neck,白色logo印花T恤, casual designer street" data-tier="1">Gucci Bandana + Logo Tee</option>
+              <option value="white satin Saint Laurent silky cami, delicate lace trim, black low-rise skinny jeans, quiet luxury" data-tier="1">Saint Laurent Satin Cami</option>
+              <option value="black Dior Oblique logo sports bra, structured, low-rise track pants, hypebeast designer athletic" data-tier="1">Dior Sports Bra + Track Pants</option>
+              <option value="cream cashmere burberry oversized sweater, one shoulder exposed, black stockings, collegiate bedroom" data-tier="1">Burberry Oversized Sweater</option>
+
+              <!-- 41-60: Sexy — designer cut-outs, sheer, bold aesthetics -->
+              <option value="black mesh layered top over black SKIMS bra, low-rise black denim, street-style designer layered look" data-tier="2">Mesh + SKIMS Bra + Denim</option>
+              <option value="white silk satin halter top, tie at neck, showing shoulders and collarbone, black low-rise leather pants" data-tier="2">Satin Halter + Leather Pants</option>
+              <option value="black low-rise latex leggings, high-shine, barely-there black lace top, bold contrast, club-ready" data-tier="2">Latex Leggings + Lace Top</option>
+              <option value="black off-shoulder band tee, slouchy fit, black G-string visible at hip gap, effortless cool" data-tier="2">Off-Shoulder Tee + G-String</option>
+              <option value="black Versace baroque print sports bra, low-rise black joggers, bold gold logo detail, hypebeast" data-tier="2">Versace Sports Bra + Joggers</option>
+              <option value="white ribbed tube top, fitted, no straps, black low-rise straight-leg jeans, minimal sexy casual" data-tier="2">Ribbed Tube Top + Straight Jeans</option>
+              <option value="black sheer long-sleeve top over black SKIMS bodysuit, layered effect, dark and edgy, model-off-duty" data-tier="2">Sheer Top + Bodysuit Layer</option>
+              <option value="black low-rise leather pants, matching black lace bralette, monochromatic, statement boots, club-ready" data-tier="2">Leather Pants + Lace Bralette</option>
+              <option value="metallic silver Fendi montechrst zipper jacket, crop length, black lace bodysuit underneath, bold logo" data-tier="2">Fendi Metallic Jacket + Lace</option>
+              <option value="black latex mini skirt, high-shine, black sheer bodysuit, matching latex choker, full club outfit" data-tier="2">Latex Mini + Sheer Bodysuit</option>
+              <option value="white sheer mesh YSL logo bodysuit, all-over Saint Laurent branding, black thong, bold designer statement" data-tier="2">YSL Mesh Logo Bodysuit</option>
+              <option value="black cut-out Nensi Dojaka inspired dress, asymmetric hem, chain detail, barely-covered chest, avant-garde" data-tier="2">Cut-Out Dress / Chain Detail</option>
+
+              <!-- 61-80: Very Sexy — body on display, luxury statement pieces -->
+              <option value="black patent leather corset top, structured, supportive boning, low-rise black thong, full display" data-tier="3">Leather Corset + Thong</option>
+              <option value="white silk robe, half-open, nothing underneath, white G-string visible, boudoir bedroom seductive" data-tier="3">Silk Robe / Half-Open + G-String</option>
+              <option value="black Balenciaga oversized logo tee, tied up to show midriff, black thong visible at hip, statement" data-tier="3">Balenciaga Tee Tied + Thong</option>
+              <option value="black SKIMS wire bra, visible under sheer black mesh top, low-rise black thong, bedroom-luxe" data-tier="3">SKIMS Bra + Mesh + Thong</option>
+              <option value="black halter latex catsuit, zip to sternum, ultra-fitted, statement boots, body-concealed-but-shaped" data-tier="3">Halter Latex Catsuit</option>
+              <option value="white cropped denim jacket, nothing underneath, black G-string, chest on full display, casual bedroom" data-tier="3">Cropped Denim Jacket / Nothing Under</option>
+              <option value="black vinyl mini skirt, matching vinyl shorts underneath, black lace push-up bra, vinyl-punk bedroom" data-tier="3">Vinyl Mini + Vinyl Shorts + Lace</option>
+              <option value="black sheer lace bodysuit, no padding, pasties, full body visibility through lace, art-house bedroom" data-tier="3">Sheer Lace Bodysuit + Pasties</option>
+              <option value="black crystal-embellished Mugler body harness, worn over bare skin, G-string, avant-garde club" data-tier="3">Crystal Harness / Mugler Style</option>
+              <option value="black leather-look Dolce Gabbana corset dress, structured boning, lace-up back, glossy patent finish" data-tier="3">D&amp;G Corset Dress / Patent</option>
+              <option value="black latex pencil skirt, matching latex halter top, full latex co-ord, glossy head-to-toe, statement" data-tier="3">Full Latex Co-ord / Halter</option>
+              <option value="black feather-trimmed jacket, nothing underneath, G-string, feather trim at hem, art-house bedroom fashion" data-tier="3">Feather-Trim Jacket / Nothing Under</option>
+
+              <!-- 81-100: Risqué — maximum display, luxury bedroom content -->
+              <option value="black patent leather harness, worn over bare skin, black G-string, layered gold chain detail, full bedroom" data-tier="4">Leather Harness + G-String + Chains</option>
+              <option value="black luxury lace lingerie set, matching garter belt and sheer black stockings, body chain, gold anklet, boudoir" data-tier="4">Lace Lingerie + Stockings + Body Chain</option>
+              <option value="black sheer floral lace bodysuit, full visibility through delicate lace, black knee-high boots, nothing else" data-tier="4">Sheer Floral Lace Bodysuit + Boots</option>
+              <option value="white silk shirt, completely open, nothing underneath, black G-string visible, effortless nsfw bedroom" data-tier="4">Open Silk Shirt + G-String</option>
+              <option value="black latex mini dress, zipped to chest, no padding, full body visibility, club-bedroom maximalist" data-tier="4">Latex Mini Dress / Unzipped</option>
+              <option value="black body chain + G-string only, layered gold chains on bare skin, maximalist bedroom content" data-tier="4">Body Chain + G-String Only</option>
+              <option value="black patent leather corset, laced front, G-string, sheer black stockings, full boudoir-latex aesthetic" data-tier="4">Leather Corset + G-String + Stockings</option>
+              <option value="black and white striped knee-high socks, white G-string, white cropped tee, collegiate bedroom aesthetic" data-tier="4">Striped Socks + G-String + Cropped Tee</option>
+              <option value="black latex catsuit, full body, zipped front, cut-out panels at waist and chest, maximum display, avant-garde" data-tier="4">Full Latex Catsuit / Cut-Out</option>
+              <option value="black crystal mesh bodysuit, all-over rhinestone detail, pasties, gold chain accessories, maximalist bedroom" data-tier="4">Crystal Mesh Bodysuit + Chains</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Accessories</label>
+            <select id="accessories">
+              <option value="layered gold chains, small hoop earrings, subtle bracelet, classic influencer">Gold Chains + Small Hoops</option>
+              <option value="chunky silver chain necklace, silver hoop earrings, stacked rings, edgy model aesthetic">Chunky Silver Chain + Hoops</option>
+              <option value="delicate gold anklet, thin gold necklace, no earrings, subtle and refined">Minimal Gold / Anklet</option>
+              <option value="oversized black sunglasses, gold statement earrings, stacked gold bracelets">Sunglasses + Statement Gold</option>
+              <option value="body chain, layered from neck to hip, gold, maximalist bedroom aesthetic">Gold Body Chain</option>
+              <option value="pearl drop earrings, layered silver chains, gold watch, clean and sophisticated">Pearl + Silver + Gold Watch</option>
+              <option value="no accessories, clean face, letting the look speak for itself">No Accessories</option>
+              <option value="silver eyebrow ring, small hoop earrings, layered chain necklace, edgy and minimal">Silver Eyebrow Ring + Hoops</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Pose</label>
+            <select id="pose">
+              <option value="standing full body, slight hip tilt, one hand on hip, other arm relaxed, phone camera angle">Standing / Hip Tilt</option>
+              <option value="mirror selfie angle, arm extended holding phone, full body visible, slight turn">Mirror Selfie / Full Body</option>
+              <option value="lying on bed, propped on elbow, legs crossed and extended, hair cascading, bedroom seductive">Lying on Bed / Seductive</option>
+              <option value="over-the-shoulder glance, looking back at camera, hair draped over shoulder, teasing expression">Over-the-Shoulder Glance</option>
+              <option value="seated on edge of bed, legs dangling, leaning back on hands, chest forward, confident bedroom">Seated on Bed Edge / Confident</option>
+              <option value="standing facing away from camera, looking back over shoulder, hair flip moment, teasing">Looking Back / Hair Flip</option>
+              <option value="lying on stomach on bed, chin in hands, legs bent upward, playful bedroom pose">Lying on Stomach / Playful</option>
+              <option value="standing in closet, arm holding rack, one leg slightly bent, casual getting-ready pose">Standing in Closet</option>
+              <option value="sitting cross-legged on bed, phone in hand, casual mirror selfie angle, relaxed bedroom">Cross-Legged on Bed / Casual</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Environment</label>
+            <select id="environment">
+              <option value="bedroom, ring light glow, soft ambient light, messy unmade bed, getting ready at home aesthetic">Bedroom / Ring Light</option>
+              <option value="bedroom, golden hour window light, unmade bed in background, warm natural glow, casual at home">Bedroom / Golden Hour</option>
+              <option value="white bathroom, clean mirror, ring light, bright overhead lighting, getting-ready mirror selfie">Bathroom / Clean Mirror</option>
+              <option value="bedroom closet, clothes rack visible, soft overhead light, casual getting-ready moment">Closet / Clothes Rack</option>
+              <option value="bedroom floor, soft carpet, toys and clothes scattered, casual real-life bedroom chaos">Bedroom Floor / Casual</option>
+              <option value="modern living room, large sofa in background, natural window light, influencer apartment aesthetic">Living Room / Natural Light</option>
+              <option value="balcony, evening string lights, city skyline visible, warm ambient glow, rooftop aesthetic">Balcony / String Lights</option>
+              <option value="bedside table, lamp glow, coffee mug, phone charging, tangled sheets, intimate morning bedroom">Bedside Table / Morning</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Lighting</label>
+            <select id="lighting">
+              <option value="ring light illumination, soft frontal glow, catchlights in eyes, bedroom ring light setup">Ring Light / Bedroom</option>
+              <option value="warm indoor ambient light, bedroom lamp glow, cozy and natural evening lighting">Bedroom Lamp / Warm Cozy</option>
+              <option value="natural window light, soft and even, authentic indoor feel, morning bedroom aesthetic">Natural Window / Soft Morning</option>
+              <option value="golden hour sun through window, warm skin tones, dreamy glow, morning light">Golden Hour / Window Glow</option>
+              <option value="overhead ceiling light, slightly harsh but natural bedroom feel, overhead bedroom lamp">Overhead Ceiling / Bedroom Lamp</option>
+              <option value="cool daylight from window, fresh morning light, natural tone, bright bedroom">Cool Morning / Daylight</option>
+              <option value="LED ring light, bright frontal fill, soft shadows, TikTok getting-ready setup, beauty light">LED Ring Light / Getting Ready</option>
+              <option value="side lamp glow, warm amber tone, moody bedroom lighting, intimate evening">Side Lamp / Moody Amber</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Color Grading</label>
+            <select id="colorGrading">
+              <option value="iPhone camera aesthetic, warm bright tone, creamy skin, lifted shadows, trending TikTok look">iPhone Camera / TikTok Look</option>
+              <option value="bright and clean, light and fresh, morning bedroom aesthetic, phone photo quality">Bright & Airy / Bedroom Morning</option>
+              <option value="golden warmth, slight fade, vintage phone photo, warm highlights, 2019 Instagram aesthetic">Golden Fade / Vintage Phone</option>
+              <option value="neutral with slight warmth, natural skin tones, minimal editing, authentic unfiltered">Neutral Natural / Unfiltered</option>
+              <option value="cool bright, lifted shadows, blue undertones, fresh skincare aesthetic, beauty filter">Cool Bright / Beauty Filter</option>
+              <option value="warm sunset tone, golden hour warmth, cozy bedroom evening glow, intimate mood">Warm Sunset / Evening Glow</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Framing</label>
+            <select id="framing">
+              <option value="vertical portrait, face and upper body only, phone camera distance">Face + Upper Body / Vertical</option>
+              <option value="vertical full body, head to toe, standing in bedroom, natural distance">Full Body / Vertical Standing</option>
+              <option value="vertical 3/4 shot, face and torso, slightly angled, natural handheld">3/4 Shot / Vertical Torso</option>
+              <option value="vertical close-up, face framing, detailed skin, freckles, natural texture">Face Close-Up / Detailed Skin</option>
+              <option value="vertical waist up, full outfit visible, casual crop, natural framing">Waist Up / Full Outfit</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Camera / Video Feel</label>
+            <select id="cameraFeel">
+              <option value="TikTok selfie, front-facing phone camera, slightly above angle, handheld movement, raw influencer aesthetic">TikTok Front Selfie</option>
+              <option value="iPhone front camera, raw unfiltered, slight motion blur, authentic TikTok dancing video">iPhone Raw Dancing</option>
+              <option value="mirror selfie, phone slightly angled, capturing full body, authentic bedroom mirror photo">Mirror Selfie / Full Body</option>
+              <option value="ring light selfie, soft frontal glow, catchlights in eyes, confident pose, popular TikTok setup">Ring Light Selfie</option>
+              <option value="handheld POV shot, first-person view, arm extended, capturing outfit, selfie-stick angle">Handheld POV / Selfie-Stick</option>
+              <option value="bedroom selfie angle, lying down perspective, phone above face, soft light, casual intimate">Bedroom Lying Down / POV</option>
+              <option value="bathroom mirror selfie, ring light glow, frontal camera, full body visible, getting-ready aesthetic">Bathroom Mirror / Full Body</option>
+              <option value="low-angle phone camera, looking up from below, dramatic bedroom lighting, night vibe">Low Angle / Night</option>
+            </select>
+          </div>
+
+          <div class="section-sep">Motion & Dynamics</div>
+
+          <div class="field">
+            <label>Motion Effect</label>
+            <select id="motion">
+              <option value="blinking, slight natural head movement, candid authenticity, TikTok video grab">Blinking / Natural Movement</option>
+              <option value="mid-motion hair flip, dynamic movement blur on strands, caught in action, trending pose">Hair Flip / Caught in Action</option>
+              <option value="subtle breathing movement, gentle rise and fall, life in the frame, authentic moment">Subtle Breathing / Authentic</option>
+              <option value="slight handheld camera shake, natural phone movement, POV bedroom selfie, TikTok grab">Handheld Shake / POV Selfie</option>
+              <option value="static pose, no motion, standing still, clean full-body shot, TikTok-ready pose">Static / TikTok-Ready Pose</option>
+            </select>
+          </div>
+
+          <div class="section-sep">Quality Tags</div>
+
+          <div class="field">
+            <div class="check-grid" id="quality-checks">
+              <label class="check-item checked"><input type="checkbox" checked> natural softness</label>
+              <label class="check-item checked"><input type="checkbox" checked> ultra detailed eyes</label>
+              <label class="check-item"><input type="checkbox"> iPhone 15 Pro camera</label>
+              <label class="check-item"><input type="checkbox"> phone video quality</label>
+              <label class="check-item"><input type="checkbox"> high detail</label>
+              <label class="check-item"><input type="checkbox"> TikTok aesthetic</label>
+              <label class="check-item"><input type="checkbox"> authentic influencer</label>
+              <label class="check-item"><input type="checkbox"> Fujifilm style</label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Output ── -->
+      <div class="card" style="margin-top: 1.5rem;">
+        <div class="card-header collapsible collapsed" onclick="toggleSection(this)">
+          <span class="card-header-dot" style="background: #7ec87e"></span>
+          <span class="card-title">Generated Prompt</span>
+          <span style="font-size:0.6rem; color:var(--text-dim); letter-spacing:0.1em;">NANOBANANA 2</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="card-body collapsed" id="prompt-body">
+          <div id="prompt-output"></div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="copyPrompt()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+            <button class="btn btn-secondary" onclick="randomize()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+              Randomize
+            </button>
+            <button class="btn btn-ghost" onclick="regenerate()" title="Re-roll without changing params">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.9"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    NanoBanana 2 Prompt Generator — for TikTok-style text2image generation
+  </footer>
+
+</div>
+
+<div class="toast" id="toast">Copied to clipboard!</div>
+
+<script>
+  // ── State ──
+  let isEnhanced = false;
+
+  // ── Helpers ──
+  const $ = id => document.getElementById(id);
+  const sel = id => {
+    const el = $(id);
+    return el ? el.value : '';
+  };
+  const checked = el => el.checked;
+
+  function toggleMode() {
+    isEnhanced = !isEnhanced;
+    const toggle = $('mode-toggle');
+    toggle.classList.toggle('enhanced', isEnhanced);
+    document.body.classList.toggle('enhanced-mode', isEnhanced);
+
+    // Swap face sections
+    $('natural-face').style.display = isEnhanced ? 'none' : 'block';
+    $('enhanced-face').style.display = isEnhanced ? 'block' : 'none';
+
+    // Update section sep color
+    $('face-sec').classList.toggle('enhanced', isEnhanced);
+    $('face-sec').textContent = isEnhanced ? 'Face & Features — Enhanced' : 'Face & Features';
+
+    buildPrompt();
+  }
+
+  // ── Sexy Slider + Outfit Sync ──
+  function updateSexyLabel() {
+    const v = parseInt($('sexy-slider').value);
+    let label = 'Moderate';
+    if (v <= 20) label = 'Conservative';
+    else if (v <= 40) label = 'Casual';
+    else if (v <= 60) label = 'Moderate';
+    else if (v <= 80) label = 'Sexy';
+    else label = 'Risqué';
+    $('sexy-label').textContent = label;
+
+    // Sync outfit dropdown to slider tier — pick random within that tier
+    const tier = tierFromValue(v);
+    const outfitEl = $('#outfit');
+    const opts = outfitEl.options;
+    let tierOpts = [];
+    for (let i = 0; i < opts.length; i++) {
+      if (String(opts[i].getAttribute('data-tier')) === String(tier)) {
+        tierOpts.push(opts[i]);
+      }
+    }
+    tierOpts = tierOpts.filter(o => o.value !== outfitEl.value);
+    if (tierOpts.length > 0) {
+      outfitEl.value = tierOpts[Math.floor(Math.random() * tierOpts.length)].value;
+    }
+    buildPrompt();
+  }
+
+  function onOutfitChange() {
+    const outfitEl = $('#outfit');
+    const selected = outfitEl.selectedOptions[0];
+    if (selected) {
+      const tier = selected.getAttribute('data-tier');
+      if (tier !== null) {
+        $('sexy-slider').value = tierFromLabel(tier);
+        const v = parseInt($('sexy-slider').value);
+        let label = 'Moderate';
+        if (v <= 20) label = 'Conservative';
+        else if (v <= 40) label = 'Casual';
+        else if (v <= 60) label = 'Moderate';
+        else if (v <= 80) label = 'Sexy';
+        else label = 'Risqué';
+        $('sexy-label').textContent = label;
+      }
+    }
+    buildPrompt();
+  }
+
+  function tierFromValue(v) {
+    if (v <= 20) return '0';
+    if (v <= 40) return '1';
+    if (v <= 60) return '2';
+    if (v <= 80) return '3';
+    return '4';
+  }
+
+  function tierFromLabel(tier) {
+    const map = { '0': 10, '1': 30, '2': 50, '3': 70, '4': 90 };
+    return map[tier] !== undefined ? map[tier] : 50;
+  }
+
+  // ── Collapsible Sections ──
+  function toggleSection(header) {
+    header.classList.toggle('collapsed');
+    const bodyId = header.nextElementSibling.id;
+    const body = $(bodyId);
+    if (body) body.classList.toggle('collapsed');
+  }
+
+  // ── Surgery Intensity Label ──
+  function updateSurgeryLabel() {
+    const v = parseInt($('surgery-intensity').value);
+    let label = 'Moderate';
+    if (v <= 20) label = 'Subtle';
+    else if (v <= 40) label = 'Light';
+    else if (v <= 60) label = 'Moderate';
+    else if (v <= 80) label = 'Heavy';
+    else label = 'Extreme';
+    $('surgery-label').textContent = label;
+    buildPrompt();
+  }
+
+  // ── Checkbox toggle ──
+  document.querySelectorAll('.check-item input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.closest('.check-item').classList.toggle('checked', cb.checked);
+      buildPrompt();
+    });
+  });
+
+  document.querySelectorAll('.check-item').forEach(item => {
+    item.addEventListener('click', e => {
+      if (e.target.tagName !== 'INPUT') {
+        const cb = item.querySelector('input');
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+
+  // ── Quality Tags ──
+  function qualityTags() {
+    const map = {
+      'natural softness': '(soft focus: 0.8), (natural softness)',
+      'ultra detailed eyes': 'ultra detailed eyes, detailed iris, detailed eyelashes',
+      '8k': '8k',
+      'RAW photo': 'RAW photo',
+      'high detail': 'high detail',
+      'cinematic lighting': 'cinematic lighting',
+      'studio quality': 'studio quality, professional photography',
+      'Fujifilm style': 'Fujifilm Superia style, warm film grain, nostalgic color'
+    };
+    const tags = [];
+    document.querySelectorAll('#quality-checks input').forEach(cb => {
+      if (cb.checked) {
+        const key = cb.closest('.check-item').textContent.trim();
+        tags.push(map[key] || key);
+      }
+    });
+    return tags.join(', ');
+  }
+
+  // ── Build Prompt ──
+  function buildPrompt() {
+    const parts = [];
+
+    // Quality preamble
+    if (isEnhanced) {
+      parts.push('TikTok influencer aesthetic, phone camera quality, beauty-enhanced, ring light glow, candid bedroom moment, authentic influencer');
+    } else {
+      parts.push('beautiful young woman, candid authentic TikTok video grab, phone camera aesthetic, natural influencer');
+    }
+
+    // Subject
+    const age = sel('age-range');
+    const ethnicity = sel('ethnicity');
+
+    if (isEnhanced) {
+      const intensity = parseInt($('surgery-intensity').value) / 100;
+      const faceShape = sel('faceShapeEnhanced');
+      const foxEye = sel('foxEye');
+      const eyeColor = sel('eyeColorEnhanced');
+      const lips = sel('lipsEnhanced');
+      const nose = sel('noseEnhanced');
+      const cheeks = sel('cheeksEnhanced');
+      const skin = sel('skinEnhanced');
+      const brows = sel('browsEnhanced');
+      const combo = sel('comboEnhanced');
+      const browVal = sel('eyebrows');
+      const browPart = brows !== 'none' ? `${brows}` : `${browVal}`;
+
+      // Intensity modifiers — always realistic, scaled by amount
+      const fillerDesc = intensity > 0.7
+        ? 'fuller lips, clear enhancement, plump and defined, noticeable volume'
+        : intensity > 0.4
+        ? 'enhanced lips, natural-looking volume, soft fullness, gentle plumpness'
+        : 'lightly enhanced lips, subtle volume, natural hydration, believable';
+      const skinDesc = intensity > 0.7
+        ? 'polished smooth skin, even complexion, healthy glow, refined finish'
+        : intensity > 0.4
+        ? 'clear healthy skin, smooth texture, natural radiance, even tone'
+        : 'natural skin texture, realistic complexion, believable, healthy';
+      const faceDesc = intensity > 0.7
+        ? 'contoured face, defined cheekbones and jaw, sculpted but proportional'
+        : intensity > 0.4
+        ? 'enhanced facial contours, defined cheekbones, subtle sculpting, polished look'
+        : 'slight facial enhancement, gentle definition, soft contouring, natural';
+
+      parts.push(
+        `1 ${ethnicity.toLowerCase()} ${age} year old woman`,
+        `${faceDesc}, ${faceShape}`,
+        `${foxEye}`,
+        `${eyeColor}, dolly wide open expression, large pupils`,
+        `${lips}, ${fillerDesc}`,
+        `${nose}`,
+        `${cheeks}`,
+        `${skinDesc}, ${skin}`,
+        `${browPart}`,
+        combo !== 'none' ? `${combo}` : ''
+      );
+    } else {
+      const skinTone = sel('skinTone');
+      const faceShape = sel('faceShape');
+      const eyeColor = sel('eyeColor');
+      const expression = sel('expression');
+      const lips = sel('lips');
+      const nose = sel('nose');
+      const skinTexture = sel('skinTexture');
+      const surgery = sel('surgery');
+
+      parts.push(
+        `1 ${ethnicity.toLowerCase()} ${age} year old woman`,
+        `${skinTone}`,
+        `${faceShape}`,
+        `${eyeColor}, soft expression, ${sel('eyebrows')}`,
+        `${lips}`,
+        `${nose}`,
+        `${skinTexture}`,
+        `${surgery}`
+      );
+    }
+
+    // Body proportions
+    parts.push(sel('body'));
+
+    // Hair
+    parts.push(sel('hair'));
+
+    // Outfit
+    parts.push(`outfit: ${sel('outfit')}`);
+
+    // Accessories
+    parts.push(`accessories: ${sel('accessories')}`);
+
+    // Pose
+    parts.push(`pose: ${sel('pose')}, ${sel('cameraFeel')}`);
+
+    // Motion
+    parts.push(`motion: ${sel('motion')}`);
+
+    // Environment
+    parts.push(`environment: ${sel('environment')}`);
+
+    // Lighting & grading
+    parts.push(`lighting: ${sel('lighting')}`);
+    parts.push(`color grading: ${sel('colorGrading')}`);
+
+    // Framing
+    parts.push(`framing: ${sel('framing')}`);
+
+    // Quality
+    parts.push(qualityTags());
+
+    // Negative
+    const negatives = [
+      'phone screen UI', 'TikTok logo', 'text on screen', 'timestamp',
+      'followers count', 'like count', 'comment section', 'share button',
+      'filter overlay', 'beauty mode filter', 'excessive smoothing',
+      'blurry', 'low quality', 'jpeg artifacts', 'compression',
+      'cropped head', 'cut off body', 'out of frame',
+      'ugly', 'deformed', 'bad anatomy', 'extra limbs'
+    ];
+
+    if (isEnhanced) {
+      negatives.push(
+        'disaster zone features', 'extreme cartoonish proportions', 'over-filtered',
+        'unnatural features', 'excessive contouring', 'fake-looking'
+      );
+    }
+
+    const prompt = parts.filter(Boolean).join(', ');
+
+    const negStr = `\n\nNegative: ${negatives.join(', ')}`;
+
+    $('prompt-output').textContent = prompt + negStr;
+
+    return prompt + negStr;
+  }
+
+  // ── Copy ──
+  function copyPrompt() {
+    const text = buildPrompt();
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('Copied to clipboard!');
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      showToast('Copied to clipboard!');
+    });
+  }
+
+  // ── Toast ──
+  function showToast(msg) {
+    const t = $('toast');
+    t.textContent = msg;
+    $('toast').classList.add('show');
+    setTimeout(() => $('toast').classList.remove('show'), 2000);
+  }
+
+  // ── Randomize ──
+  function randomize() {
+    // Always randomize style & environment selects
+    const styleSelects = ['body','ethnicity','skinTone','hair','eyebrows','outfit','accessories','pose','environment','lighting','colorGrading','framing','cameraFeel','motion'];
+    styleSelects.forEach(id => {
+      const s = $(id);
+      if (!s) return;
+      const opts = Array.from(s.options);
+      let newOpts = opts.filter(o => o.value !== s.value);
+      if (newOpts.length > 0) {
+        s.value = newOpts[Math.floor(Math.random() * newOpts.length)].value;
+      }
+    });
+
+    // Only randomize face selects that match active mode
+    const faceSelects = isEnhanced
+      ? ['faceShapeEnhanced','foxEye','eyeColorEnhanced','lipsEnhanced','noseEnhanced','cheeksEnhanced','skinEnhanced','browsEnhanced','comboEnhanced']
+      : ['faceShape','eyeColor','expression','lips','nose','skinTexture','surgery'];
+
+    faceSelects.forEach(id => {
+      const s = $(id);
+      if (!s) return;
+      const opts = Array.from(s.options);
+      let newOpts = opts.filter(o => o.value !== s.value);
+      if (newOpts.length > 0) {
+        s.value = newOpts[Math.floor(Math.random() * newOpts.length)].value;
+      }
+    });
+
+    // Always randomize these
+    $('age-range').value = Math.floor(Math.random() * (40 - 18 + 1)) + 18;
+    $('age-val').textContent = $('age-range').value;
+    const newSliderVal = Math.floor(Math.random() * 100);
+    $('sexy-slider').value = newSliderVal;
+    updateSexyLabel(); // sets label + syncs outfit + rebuilds prompt
+    $('surgery-intensity').value = Math.floor(Math.random() * 100);
+    updateSurgeryLabel(); // calls buildPrompt
+    // Explicitly rebuild one more time to ensure output is fresh
+    buildPrompt();
+  }
+
+  // ── Regenerate ──
+  function regenerate() {
+    buildPrompt();
+  }
+
+  // ── Age range sync ──
+  $('age-range').addEventListener('input', e => {
+    $('age-val').textContent = e.target.value;
+  });
+
+  // ── Live update on any change ──
+  document.querySelectorAll('select').forEach(el => {
+    el.addEventListener('change', buildPrompt);
+  });
+
+  // Init
+  updateSexyLabel(); // sets label + randomizes outfit + calls buildPrompt once
+  updateSurgeryLabel(); // sets label + calls buildPrompt
+</script>
+
+</body>
+</html>

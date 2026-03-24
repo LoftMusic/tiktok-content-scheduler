@@ -21,6 +21,11 @@
   let lastPlayedElement = null;
   let recordingFilename = null; // Locked at start - never changes during recording
   
+  // Splice player watch state
+  let loopPollInterval = null;
+  let loopLastProgress = -1;
+  let loopDoneTimeout = null;
+  
   // One Shot categories
   const oneShotCategories = ['kick', 'snare', 'hihat', 'tom', 'clap', 'perc', 'fx', 'vocal', 'other'];
   
@@ -580,7 +585,13 @@
           startTime = Date.now();
           updateUI();
           startTimer();
-          setStatus('🔴 Recording... Play your sample!', 'info');
+          // In loop mode, start watching the Splice progress bar for completion
+          if (currentMode === 'loop') {
+            startWatchingSplicePlayer();
+            setStatus('🔴 Recording LOOP — waiting for sample to finish...', 'info');
+          } else {
+            setStatus('🔴 Recording... Play your sample!', 'info');
+          }
           // Don't clear filename - keep it for reference
         } else {
           setStatus('❌ ' + (response?.error || 'Failed to start'), 'error');
@@ -611,6 +622,7 @@
       
       chrome.runtime.sendMessage({ type: 'stopRecording', settings }, (response) => {
         isRecording = false;
+        stopWatchingSplicePlayer(); // stop progress bar watching
         updateUI();
         recordingFilename = null; // Clear locked filename after save
         
@@ -850,4 +862,158 @@
     });
   }
   
+  // ========== LOOP DETECTION VIA SPLICE PROGRESS BAR ==========
+  
+  /**
+   * Watch the Splice player progress bar. When it reaches 100% (completed)
+   * and stays there without restarting, trigger stop.
+   * This is architecture-proof since it reads Splice's own DOM state.
+   */
+  function startWatchingSplicePlayer() {
+    // Clean up any previous watch
+    stopWatchingSplicePlayer();
+    
+    // Poll every 250ms for the player + progress bar
+    loopPollInterval = setInterval(() => {
+      if (!isRecording) return;
+      
+      // Try multiple selectors for Splice's progress bar
+      // The player may appear in various places in the DOM
+      const progressBar = 
+        document.querySelector('sp-smart-player-progress[role="slider"], ' + 
+                              'sp-player-progress[role="slider"], ' +
+                              '[data-qa="player-progress"], ' +
+                              'sp-waveform-preview .progress, ' +
+                              '.preview-player [role="slider"], ' +
+                              'sp-player .progress, ' +
+                              '[role="progressbar"]');
+      
+      if (!progressBar) {
+        // Try finding any progress element within the player
+        const playerEl = document.querySelector('sp-player, sp-smart-player, .preview-player, .waveform-preview, sp-waveform-preview');
+        if (playerEl) {
+          const inner = playerEl.querySelector('[role="slider"], [role="progressbar"], progress');
+          if (inner) {
+            checkProgress(inner);
+            return;
+          }
+        }
+        return;
+      }
+      
+      checkProgress(progressBar);
+    }, 250);
+  }
+  
+  function checkProgress(progressBar) {
+    // Read current progress: try attribute (value/max), aria-valuenow, or style width
+    let progress = -1;
+    
+    const attrVal = progressBar.getAttribute('value');
+    const attrMax = progressBar.getAttribute('max');
+    if (attrVal !== null && attrMax !== null) {
+      progress = parseFloat(attrVal) / parseFloat(attrMax);
+    }
+    
+    if (progress < 0) {
+      const ariaNow = progressBar.getAttribute('aria-valuenow');
+      if (ariaNow !== null) {
+        progress = parseFloat(ariaNow);
+        if (progress > 1) progress /= 100; // sometimes in percent, sometimes 0-100
+      }
+    }
+    
+    if (progress < 0) {
+      // Try CSS width on a fill element
+      const fill = progressBar.querySelector('.fill, .progress-fill, [class*="fill"]');
+      if (fill) {
+        const style = fill.getAttribute('style') || '';
+        const match = style.match(/width:\s*([0-9.]+)/);
+        if (match) {
+          progress = parseFloat(match[1]) / 100;
+        }
+      }
+    }
+    
+    // Still nothing — try the slider thumb position
+    if (progress < 0) {
+      const thumb = progressBar.querySelector('[class*="thumb"], [class*="handle"]');
+      if (thumb) {
+        // skip for now
+      }
+    }
+    
+    if (progress < 0) return; // can't determine progress
+    
+    // Round to 2 decimal places to avoid floating point churn
+    progress = Math.round(progress * 100) / 100;
+    
+    if (progress === loopLastProgress) return; // no change
+    
+    console.log('[Audio Recorder] Progress:', Math.round(progress * 100) + '%', 'last:', Math.round(loopLastProgress * 100) + '%');
+    loopLastProgress = progress;
+    
+    if (progress >= 0.99) {
+      // Reached 100% — wait 300ms to see if it resets (loop restart) or stays
+      if (loopDoneTimeout) clearTimeout(loopDoneTimeout);
+      loopDoneTimeout = setTimeout(() => {
+        // Check if progress is STILL at 100% after 300ms — if so, it's done
+        const currentProgress = getCurrentProgress(progressBar);
+        if (currentProgress >= 0.99) {
+          triggerLoopStop();
+        }
+      }, 300);
+    } else {
+      // Progress dropped (loop restarted) — cancel any pending stop
+      if (loopDoneTimeout) {
+        clearTimeout(loopDoneTimeout);
+        loopDoneTimeout = null;
+        console.log('[Audio Recorder] Loop restarted — continuing recording');
+      }
+    }
+  }
+
+  // Called when loop detection triggers stop — cleans up watcher then fires stop
+  function triggerLoopStop() {
+    console.log('[Audio Recorder] Loop complete — triggering stop');
+    stopWatchingSplicePlayer();
+    chrome.runtime.sendMessage({ type: 'stopRecording', settings: {
+      mode: currentMode,
+      category: currentCategory,
+      filename: recordingFilename || null,
+      threshold: parseInt(document.querySelector('#ar-threshold')?.value || '-40'),
+      fadeout: parseInt(document.querySelector('#ar-fadeout')?.value || '50')
+    }});
+  }
+  
+  function getCurrentProgress(progressBar) {
+    let progress = -1;
+    const attrVal = progressBar.getAttribute('value');
+    const attrMax = progressBar.getAttribute('max');
+    if (attrVal !== null && attrMax !== null) {
+      progress = parseFloat(attrVal) / parseFloat(attrMax);
+    }
+    if (progress < 0) {
+      const ariaNow = progressBar.getAttribute('aria-valuenow');
+      if (ariaNow !== null) {
+        progress = parseFloat(ariaNow);
+        if (progress > 1) progress /= 100;
+      }
+    }
+    return progress;
+  }
+  
+  function stopWatchingSplicePlayer() {
+    if (loopPollInterval) {
+      clearInterval(loopPollInterval);
+      loopPollInterval = null;
+    }
+    if (loopDoneTimeout) {
+      clearTimeout(loopDoneTimeout);
+      loopDoneTimeout = null;
+    }
+    loopLastProgress = -1;
+  }
+  
+  // ========== RECORDING TOGGLE ==========
 })();
